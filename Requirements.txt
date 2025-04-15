@@ -1,0 +1,93 @@
+The requirements based on the three types of users: Admin, Job Seeker, and Company/Employer.
+
+1. Admin Requirements
+	: Admin has full control over the platform.
+
+	# Functional Requirements
+		: Admin Login
+
+		: Manage Companies 
+			- Approve/reject company registrations
+			- View all registered companies
+			- Block/unblock companies
+
+		: Manage Job Seekers
+			- View job seeker profiles
+			- Block/unblock accounts
+
+
+		: Manage Job Listings
+			- View, edit, or remove any job
+	
+	# Non-Functional 
+		: Logs for admin actions
+
+2. Job Seeker Requirements
+
+ 	# Functional Requirements
+		: Register/Login
+
+		: Edit Profile
+			- Upload Photo 
+			- Description (About)
+			- Skills
+			- Education
+			- Project (with selected language)
+			- Experience (if any) / Internship
+			- Resume upload
+
+		: Browse Jobs (filter by)
+			- location
+			- category
+			- salary
+			- company
+		
+		: Apply for Jobs
+		: View Application Status 
+		: View past Application History
+
+		: Email Notifications
+			- Application Status Updated
+			- Password Change
+
+		: Delete/Deactivate Account
+
+3. Company/Employer Requirements
+		
+	# Functional Requirements
+		: Register/Login
+		: Edit Company Profile
+			- Logo
+			- Description
+			- Location
+
+		: Post Jobs
+			- Job title
+			- Job description
+			- Skills Required
+			- Experience Required
+			- Salary
+
+		: Manage Jobs
+			- Update job post
+			- Delete job post
+			- Close job post (by default close after 7 days)
+
+		: View Applicants
+			- List of applicants per job
+			- Download resumes
+			- Filter by skills/experience
+		
+		: Approve / Reject for Interview
+
+
+
+DATA-BASE Requirements
+	- users
+	- job_seeker
+	- companie
+	- jobs
+	- skills
+	- job_skills
+	- job_seeker_skills
+	- applications (applied jobs by job seeker)
