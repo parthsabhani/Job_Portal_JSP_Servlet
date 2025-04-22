@@ -1,0 +1,57 @@
+package com.controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import com.dao.UserDao;
+import com.model.CompanyModel;
+
+@WebServlet("/CompanyController")
+public class CompanyController extends HttpServlet 
+{
+	private static final long serialVersionUID = 1L;
+
+	public CompanyController() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+	
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		String name = request.getParameter("name");
+		
+		if(name.equalsIgnoreCase("register"))
+		{
+			CompanyModel rmodel = new CompanyModel();
+			rmodel.setName(request.getParameter("name"));	
+			
+			String email = request.getParameter("email");
+			if(new ComapnyDao().isEmailExist(email)) 
+			{				
+				request.setAttribute("error", "email already exists");
+				request.getRequestDispatcher("companyRegistration.jsp").forward(request, response);
+			}
+			else
+			{		
+//				System.out.println("email added");
+				rmodel.setEmail(email);
+			}
+
+			rmodel.setAddress(request.getParameter("address"));
+			rmodel.setPhone(request.getParameter("phone"));
+			rmodel.setWebsite(request.getParameter("website"));
+			rmodel.setPassword(request.getParameter("password"));
+			
+			
+		}
+	}
+}
+

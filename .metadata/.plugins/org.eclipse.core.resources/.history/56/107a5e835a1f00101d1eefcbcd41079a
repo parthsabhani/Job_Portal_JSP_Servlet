@@ -1,0 +1,7 @@
+package com.model;
+
+public class UserModel 
+{
+	private int userid, age;
+	private String firstName, lastName, email, gender, address, phone, password;
+}

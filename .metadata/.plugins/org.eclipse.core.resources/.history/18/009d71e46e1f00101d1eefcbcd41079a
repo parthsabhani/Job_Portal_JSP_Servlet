@@ -1,0 +1,20 @@
+package com.dao;
+
+import java.sql.Connection;
+
+import com.util.ConnectionClass;
+
+public class AdminDao 
+{
+	Connection c = null;
+	
+	public boolean adminLogin(String username, String password)
+	{
+		boolean isValid = false;
+		
+		c = ConnectionClass.getConnection();
+		String q = "select * from admin where username = ? and password = ?";
+		
+		return isValid;
+	}
+}

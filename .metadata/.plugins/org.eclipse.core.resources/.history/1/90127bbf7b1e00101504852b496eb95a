@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: olive;
+  width: 100%;
+}
+
+.home-img {
+  width: 100%;
+  height: auto; /* maintains aspect ratio */
+  object-fit: cover; /* optional: crops if necessary */
+}
+
+
+.container {
+  background-color: lime;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

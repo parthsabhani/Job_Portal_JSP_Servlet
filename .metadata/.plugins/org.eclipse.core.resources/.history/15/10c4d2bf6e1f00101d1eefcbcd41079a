@@ -1,0 +1,13 @@
+package com.dao;
+
+import java.sql.Connection;
+
+public class AdminDao 
+{
+	Connection c = null;
+	
+	public boolean adminLogin(String username, String password)
+	{
+		
+	}
+}

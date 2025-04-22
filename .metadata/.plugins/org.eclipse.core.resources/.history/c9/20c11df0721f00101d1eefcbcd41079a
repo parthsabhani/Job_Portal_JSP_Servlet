@@ -1,0 +1,65 @@
+package com.controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+import com.dao.AdminDao;
+import com.model.CompanyModel;
+
+@WebServlet("/AdminController")
+public class AdminController extends HttpServlet 
+{
+	private static final long serialVersionUID = 1L;
+    public AdminController() {
+        super();
+
+    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+	
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		
+		AdminDao admin = new AdminDao();
+		
+		boolean isValid = admin.adminLogin(username, password);
+		
+		if(isValid)
+		{
+			List<CompanyModel> companyList = admin.getAllCompanies();
+			
+			for(CompanyModel company : companyList)
+			{
+				System.out.println(company);
+			}
+			
+			request.setAttribute("companyList", companyList);
+			request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
+		}
+		else
+		{
+			response.sendRedirect("adminLogin.jsp?error=Invalid username and password");
+		}
+		
+		String value = request.getParameter("value");
+		
+		if(value.equalsIgnoreCase("approve"))
+		{
+			response.sendRedirect("adminDashboard.jsp");
+		}
+		else if(value.equalsIgnoreCase("reject"))
+		{
+			response.sendRedirect("adminDashboard.jsp");
+		}
+	}
+
+}

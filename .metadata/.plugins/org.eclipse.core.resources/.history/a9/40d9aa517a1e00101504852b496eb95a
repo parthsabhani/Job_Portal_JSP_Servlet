@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#home {
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  background-color: olive;
+  flex: 1; /* Takes 50% height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background-color: lime;
+  flex: 1; /* Takes 50% height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

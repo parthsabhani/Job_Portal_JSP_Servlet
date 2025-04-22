@@ -1,0 +1,26 @@
+package com.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class ConnectionClass 
+{
+	private static Connection c;
+	private static String URL = "";
+	private static String USERNAME = "postgres";
+	private static String PASSWORD = "root";
+	
+	public static Connection getConnection()
+	{
+		try 
+		{
+			c = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return c;
+	}
+}

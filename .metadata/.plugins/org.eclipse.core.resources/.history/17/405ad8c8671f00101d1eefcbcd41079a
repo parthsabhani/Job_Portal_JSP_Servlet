@@ -1,0 +1,13 @@
+package com.dao;
+
+import java.sql.Connection;
+
+public class CompanyDao 
+{
+	Connection c= null;
+	
+	public boolean isEmailExists(String email)
+	{
+		
+	}
+}

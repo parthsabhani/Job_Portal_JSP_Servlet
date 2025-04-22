@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background-color: lime;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,107 @@
+package com.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import com.model.UserModel;
+import com.util.ConnectionClass;
+
+public class UserDao 
+{
+	Connection c = null;
+	
+	public int userRegistration(UserModel rmodel)
+	{
+		int x= 0;
+		
+		c = ConnectionClass.getConnection();
+		String q = "INSERT INTO users (firstName, lastName, email, age, gender, address, phone, password, isActive)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try 
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setString(1, rmodel.getFirstName());
+			ps.setString(2, rmodel.getLastName());
+			ps.setString(3, rmodel.getEmail());
+			ps.setInt(4, rmodel.getAge());
+			ps.setString(5, rmodel.getGender());
+			ps.setString(6, rmodel.getAddress());
+			ps.setString(7, rmodel.getPhone());
+			ps.setString(8, rmodel.getPassword());
+			ps.setBoolean(9, true);
+			
+			x = ps.executeUpdate();
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return x;
+	}
+
+	public boolean isEmailExist(String email)
+	{
+		boolean isExist = false;
+		c = ConnectionClass.getConnection();
+		String q = "select * from users where email = ? and isActive = true";
+		try 
+		{			
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setString(1, email);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+				isExist = true;
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return isExist;
+	}
+
+	public UserModel userLogin(String email, String password)
+	{
+		UserModel model = null;
+		
+		c = ConnectionClass.getConnection();
+		String q = "select * from users where email = ? and password = ? and isActive = true";
+		
+		try 
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setString(1, email);
+			ps.setString(2, password);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+				model = new UserModel();
+				model.setUserid(rs.getInt("userid"));
+				model.setFirstName(rs.getString("firstName"));
+				model.setLastName(rs.getString("lastName"));
+				model.setEmail(rs.getString("email"));
+				model.setAge(rs.getInt("age"));
+				model.setGender(rs.getString("gender"));
+				model.setAddress(rs.getString("address"));
+				model.setPhone(rs.getString("phone"));
+				model.setPassword(rs.getString("password"));
+				model.setActive(rs.getBoolean("isActive"));;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return model;
+	}
+}

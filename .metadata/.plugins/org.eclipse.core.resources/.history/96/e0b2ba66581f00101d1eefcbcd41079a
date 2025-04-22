@@ -1,0 +1,18 @@
+package com.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class ConnectionClass 
+{
+	private static Connection c;
+	private static String URL = "";
+	private static String USERNAME = "postgres";
+	private static String PASSWORD = "";
+	
+	public static Connection getConnection()
+	{
+		c = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		
+	}
+}

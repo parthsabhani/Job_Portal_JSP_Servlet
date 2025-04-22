@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#home {
+  height: 100vh; /* Full screen height */
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: olive;
+  width: 100%;
+  overflow: hidden; 
+}
+
+.home-img {
+  width: 100%;      
+  height: auto;      
+}
+
+
+.container {
+  background-color: lime;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
