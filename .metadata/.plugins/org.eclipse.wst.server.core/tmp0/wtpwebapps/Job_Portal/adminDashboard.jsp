@@ -110,9 +110,9 @@ a:hover {
 						style="display: inline;">
 						<input type="hidden" name="companyId"
 							value="<%=company.getCompanyid()%>">
-						<button type="submit" name="value" value="approve"
+						<button type="submit" name="action" value="approve"
 							class="btn approve-btn">Approve</button>
-						<button type="submit" name="value" value="reject"
+						<button type="submit" name="action" value="reject"
 							class="btn reject-btn">Reject</button>
 					</form>
 				</td>

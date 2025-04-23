@@ -28,9 +28,9 @@ public class UserController extends HttpServlet
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		String value = request.getParameter("value");
+		String action = request.getParameter("action");
 		
-		if(value.equalsIgnoreCase("register"))
+		if(action.equalsIgnoreCase("register"))
 		{
 			UserModel rmodel = new UserModel();
 			
@@ -77,7 +77,7 @@ public class UserController extends HttpServlet
 				response.sendRedirect("jobSeekerRegistration.jsp");	
 			}
 			
-		} else if(value.equalsIgnoreCase("login"))
+		} else if(action.equalsIgnoreCase("login"))
 		{
 			UserModel lmodel = new UserModel();
 			lmodel.setEmail(request.getParameter("email"));
@@ -88,7 +88,7 @@ public class UserController extends HttpServlet
 			if(model != null)
 			{
 				HttpSession session = request.getSession();
-				session.setAttribute("user", model);
+				session.setAttribute("model", model);
 				response.sendRedirect("jobSeekerDashboard.jsp");
 			}else
 			{

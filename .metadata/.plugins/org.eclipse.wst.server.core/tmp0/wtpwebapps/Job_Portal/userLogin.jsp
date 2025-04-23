@@ -133,7 +133,7 @@ h2 {
 
 
 			<!-- Login Button -->
-			<button type="submit" class="login-btn" name="value" value="login">Login</button>
+			<button type="submit" class="login-btn" name="action" value="login">Login</button>
 
 			<!-- Forgot Password Link -->
 			<a href="#" class="forgot-password">Forgot Password?</a>

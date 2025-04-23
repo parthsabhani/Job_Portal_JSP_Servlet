@@ -27,11 +27,11 @@ public class AdminController extends HttpServlet
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		String value = request.getParameter("value");
+		String action = request.getParameter("action");
 		AdminDao admin = new AdminDao();
 		
 		// Admin Login
-		if(value.equalsIgnoreCase("adminLogin"))
+		if(action.equalsIgnoreCase("login"))
 		{
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
@@ -49,7 +49,7 @@ public class AdminController extends HttpServlet
 				response.sendRedirect("adminLogin.jsp?error=Invalid username and password");
 			}
 		}
-		else if(value.equalsIgnoreCase("approve")) // Company Approval
+		else if(action.equalsIgnoreCase("approve")) // Company Approval
 		{
 			int x = admin.updateStatusCompany(Integer.parseInt(request.getParameter("companyId")),true);
 			if(x > 0)
@@ -63,7 +63,7 @@ public class AdminController extends HttpServlet
 				response.sendRedirect("error.jsp");
 			}
 		}
-		else if(value.equalsIgnoreCase("reject")) // Company Rejection
+		else if(action.equalsIgnoreCase("reject")) // Company Rejection
 		{
 			int x = admin.updateStatusCompany(Integer.parseInt(request.getParameter("companyId")),false);
 			if(x > 0)

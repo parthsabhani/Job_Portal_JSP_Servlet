@@ -195,7 +195,7 @@ label {
 				${ error }
 			</div>
 
-			<button type="submit" class="submit-btn" name="value" value="register">Register</button>
+			<button type="submit" class="submit-btn" name="action" value="register">Register</button>
 
 		</form>
 	</div>

@@ -1,5 +1,14 @@
+<%@page import="com.model.UserModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+  UserModel model = (UserModel) session.getAttribute("model"); // You might get this from login logic
+  request.setAttribute("firstname", model.getFirstName());
+  request.setAttribute("lastname", model.getLastName());
+  request.setAttribute("role", "jobseeker");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +16,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Hello Job Seeker</h1>
+
+	<!-- Header Start -->
+	<jsp:include page="header.jsp" />
+	<!-- Header End -->
 	
 	<!-- Footer Start -->
 	<%

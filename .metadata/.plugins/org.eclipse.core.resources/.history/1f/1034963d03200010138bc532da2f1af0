@@ -1,0 +1,151 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Login</title>
+
+<!-- Poppins Font -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+	rel="stylesheet">
+
+<!-- Font Awesome for Eye Icon (WORKING CDN) -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+	integrity="sha512-G7IlGg6X2De5F+fDxzOD4kq9A3r8MX2+K+zXSl8G0FBRtKj9iL9KkYPj50++zzN6vRQU8Tlv5mI9lEC8V7M6vw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: #f4f4f4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+
+.login-container {
+	background-color: #fff;
+	padding: 30px 25px;
+	border-radius: 8px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 350px;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 30px;
+	color: #333;
+}
+
+.input-group {
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.input-field {
+	width: 100%;
+	padding: 12px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+.toggle-password {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	cursor: pointer;
+	color: #888;
+}
+
+.login-btn {
+	width: 100%;
+	padding: 12px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	font-size: 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+.login-btn:hover {
+	background-color: #28a745;
+	color: #fff;
+}
+
+.forgot-password {
+	display: block;
+	text-align: right;
+	margin-top: 10px;
+	font-size: 12px;
+	text-decoration: none;
+	color: #007BFF;
+}
+
+.forgot-password:hover {
+	text-decoration: underline;
+}
+
+.error {
+	color: red;
+	font-size: 12px;
+	margin-top: -10px;
+	text-align: center;
+	margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+	<div class="login-container">
+		<h2>LOGIN</h2>
+		<form action="UserController" method="post">
+			<!-- Email -->
+			<div class="input-group">
+				<input type="email" name="email" placeholder="Email Address"
+					class="input-field" required>
+			</div>
+
+			<!-- Password + Eye -->
+			<div class="input-group">
+				<input type="password" name="password" id="password"
+					placeholder="Password" class="input-field" required>
+			</div>
+
+			<%
+				String error = request.getParameter("error");
+				if (error != null) {
+			%>
+				<div id="errorMessages" class="error"><%=error%></div>
+			<%
+				}
+			%>
+
+
+			<!-- Login Button -->
+			<button type="submit" class="login-btn" name="value" value="login">Login</button>
+
+			<!-- Forgot Password Link -->
+			<a href="#" class="forgot-password">Forgot Password?</a>
+		</form>
+	</div>
+
+
+	<!-- Footer Start -->
+	<%
+    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
+</body>
+</html>

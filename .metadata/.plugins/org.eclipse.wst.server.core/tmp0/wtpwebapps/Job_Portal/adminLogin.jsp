@@ -82,7 +82,7 @@ body {
 			<input type="password" name="password" placeholder="Password"
 				required>
 			<div id="errorMessages" class="error">${ error }</div>
-			<button type="submit" class="login-btn" name="value" value="adminLogin">Login</button>
+			<button type="submit" class="login-btn" name="action" value="login">Login</button>
 		</form>
 	</div>
 	<!-- Login Card End -->

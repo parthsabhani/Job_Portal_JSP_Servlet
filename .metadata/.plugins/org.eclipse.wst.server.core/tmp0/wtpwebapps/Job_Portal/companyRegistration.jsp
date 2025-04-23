@@ -164,7 +164,7 @@ label {
 
 			<div id="errorMessages" class="error">${ error }</div>
 
-			<button type="submit" class="submit-btn" name="value" value="register">Apply Register</button>
+			<button type="submit" class="submit-btn" name="action" value="register">Register</button>
 
 		</form>
 	</div>

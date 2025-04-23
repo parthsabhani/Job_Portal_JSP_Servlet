@@ -30,8 +30,8 @@ public class CompanyController extends HttpServlet
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		String value = request.getParameter("value");
-		if(value.equalsIgnoreCase("register"))
+		String action = request.getParameter("action");
+		if(action.equalsIgnoreCase("register"))
 		{
 			CompanyModel rmodel = new CompanyModel();
 			rmodel.setName(request.getParameter("name"));	
@@ -66,7 +66,7 @@ public class CompanyController extends HttpServlet
 				response.sendRedirect("companyRegistration.jsp");
 			}
 		}
-		else if(value.equalsIgnoreCase("login"))
+		else if(action.equalsIgnoreCase("login"))
 		{
 			CompanyModel lmodel = new CompanyModel();
 			lmodel.setEmail(request.getParameter("email"));
@@ -77,7 +77,7 @@ public class CompanyController extends HttpServlet
 			if(model != null)
 			{
 				HttpSession session = request.getSession();
-				session.setAttribute("company", model);
+				session.setAttribute("model", model);
 				response.sendRedirect("companyDashboard.jsp");
 			}else
 			{

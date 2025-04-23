@@ -1,15 +1,27 @@
+<%@page import="com.model.CompanyModel"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%
+  CompanyModel model = (CompanyModel) session.getAttribute("model"); // You might get this from login logic
+  request.setAttribute("firstname", model.getName());
+  request.setAttribute("lastname", "");
+  request.setAttribute("role", "company");
+%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Company Dashboard</title>
 </head>
 <body>
-<h1>Hello Company Employeer</h1>
 
-
+	<!-- Header Start -->
+	<jsp:include page="header.jsp" />
+	<!-- Header End -->
+	
 	<!-- Footer Start -->
 	<%
     	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");

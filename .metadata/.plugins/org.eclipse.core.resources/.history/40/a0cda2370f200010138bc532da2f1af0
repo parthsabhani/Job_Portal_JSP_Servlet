@@ -1,0 +1,210 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page session="true"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Header with Right Menu and User Dropdown</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+	rel="stylesheet">
+<style>
+body {
+	margin: 0;
+	font-family: 'Poppins', sans-serif;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #2c3e50;
+	padding: 10px 20px;
+	color: white;
+}
+
+.logo {
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.right-section {
+	display: flex;
+	align-items: center;
+	gap: 40px;
+}
+
+.nav-links a {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	margin-left: 30px;
+	transition: color 0.5s ease;
+}
+
+.nav-links a:hover {
+	color: #f39c12;
+}
+
+.user-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.user-button {
+	background-color: #2c3e50;
+	color: green;
+	border: none;
+	cursor: pointer;
+	padding: 10px;
+	font-size: 22px;
+	font-family: 'Poppins', sans-serif;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	right: 0;
+	background-color: white;
+	color: black;
+	min-width: 180px;
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.dropdown-content a {
+	padding: 12px 16px;
+	display: block;
+	text-decoration: none;
+	color: black;
+	font-weight: 400;
+}
+
+.dropdown-content a:hover {
+	background-color: #f1f1f1;
+}
+
+.dropdown-content a:last-child:hover {
+	background-color: red;
+	color: black;
+}
+
+.user-dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.menu-dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.menu-button {
+	background-color: #2c3e50;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 10px 30px;
+	font-size: 18px;
+	font-family: 'Poppins', sans-serif;
+	transition: background-color 0.4s ease;
+}
+
+.menu-button:hover {
+	background-color: #34495e;
+}
+
+.menu-dropdown-content {
+	display: none;
+	position: absolute;
+	right: 0;
+	background-color: white;
+	min-width: 260px;
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	border-radius: 4px;
+	overflow: hidden;
+	top: 100%;
+}
+
+.menu-dropdown-content a {
+	padding: 12px 16px;
+	display: block;
+	color: black;
+	font-weight: 400;
+}
+
+.menu-dropdown-content a:hover {
+	background-color: #f1f1f1;
+}
+
+.menu-dropdown:hover .menu-dropdown-content {
+	display: block;
+}
+</style>
+</head>
+<body>
+
+	<div class="header">
+		<div class="logo">Talent Hub</div>
+
+		<div class="right-section">
+			<div class="nav-links">
+				<%
+				String role = (String) request.getAttribute("role");
+				if ("jobseeker".equalsIgnoreCase(role)) {
+				%>
+				<a href="applications.jsp">Applications</a> 
+				<%
+				} else if ("company".equalsIgnoreCase(role)) {
+				%>
+				<a href="post-job.jsp">Post a Job</a>
+				<div class="menu-dropdown">
+				<button class="menu-button">Applications</button>
+					<div class="menu-dropdown-content">
+						<a href="manage-applications.jsp">Manage Applications</a> 
+						<a href="past-applications.jsp">Past Applications</a>
+					</div>
+				</div>
+				<%
+				} else {
+				%>
+				<a href="about.jsp">About</a> <a href="contact.jsp">Contact</a>
+				<%
+				}
+				%>
+			</div>
+
+			<div class="user-dropdown">
+				<%
+				String first = (String) request.getAttribute("firstname");
+				String last = (String) request.getAttribute("lastname");
+
+				String displayName = "Guest";
+				
+				if (first != null && last != null) {
+					displayName = first + " " + last;
+				} else {
+					// Fallback if you still want to check session or other logic
+					String sessionName = (String) session.getAttribute("username");
+					if (sessionName != null) {
+						displayName = sessionName;
+					}
+				}
+				%>
+				<button class="user-button">
+					<%=displayName%>
+					▼
+				</button>
+				<div class="dropdown-content">
+					<a href="profile.jsp">View Profile</a> 
+					<a href="logout.jsp">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
