@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.util.List;
 
 import com.dao.AdminDao;
@@ -27,25 +28,19 @@ public class AdminController extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		String value = request.getParameter("value");
+		AdminDao admin = new AdminDao();
 		
+		// Admin Login
 		if(value.equalsIgnoreCase("adminLogin"))
 		{
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-			
-			AdminDao admin = new AdminDao();
-			
+	
 			boolean isValid = admin.adminLogin(username, password);
 			
 			if(isValid)
 			{
 				List<CompanyModel> companyList = admin.getAllCompanies();
-				
-				for(CompanyModel company : companyList)
-				{
-					System.out.println(company);
-				}
-					
 				request.setAttribute("companyList", companyList);
 				request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
 			}
@@ -54,15 +49,34 @@ public class AdminController extends HttpServlet
 				response.sendRedirect("adminLogin.jsp?error=Invalid username and password");
 			}
 		}
-		else if(value.equalsIgnoreCase("approve")) 
+		else if(value.equalsIgnoreCase("approve")) // Company Approval
 		{
-			response.sendRedirect("adminDashboard.jsp");
+			int x = admin.updateStatusCompany(Integer.parseInt(request.getParameter("companyId")),true);
+			if(x > 0)
+			{				
+				List<CompanyModel> companyList = admin.getAllCompanies();
+				request.setAttribute("companyList", companyList);
+				request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
+			}
+			else
+			{
+				response.sendRedirect("error.jsp");
+			}
 		}
-		else if(value.equalsIgnoreCase("reject"))
+		else if(value.equalsIgnoreCase("reject")) // Company Rejection
 		{
-			response.sendRedirect("adminDashboard.jsp");
+			int x = admin.updateStatusCompany(Integer.parseInt(request.getParameter("companyId")),false);
+			if(x > 0)
+			{				
+				List<CompanyModel> companyList = admin.getAllCompanies();
+				request.setAttribute("companyList", companyList);
+				request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
+			}
+			else
+			{
+				response.sendRedirect("error.jsp");
+			}
 		}
-		
 	}
 
 }

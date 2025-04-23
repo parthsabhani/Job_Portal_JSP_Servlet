@@ -91,20 +91,12 @@
       background-color: #333;
     }
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 8px 0;
-      color: white;
-      text-align: center;
-      font-size: 12px;
-      font-family: 'Poppins', sans-serif;
-    }
   </style>
 </head>
 <body>
+  <!-- Main Card Container Start -->
   <div class="card-container">
+  	<!-- User (Job Seeker) Card Start -->
     <div class="card">
       <div class="card-title">JOB SEEKER</div>
       <div class="card-buttons">
@@ -117,21 +109,30 @@
 		</a>
       </div>
     </div>
+    <!-- User (Job Seeker) Card End -->
+    
+    <!-- Company Card Start -->
     <div class="card">
       <div class="card-title">COMPANY</div>
       <div class="card-buttons">
       <a href="companyRegistration.jsp">
         <button>Registration</button>
       </a>  
-      <a href="userLogin.jsp">
+      <a href="companyLogin.jsp">
         <button>Login</button>
       </a>
       </div>
     </div>
+    <!-- Company Card End -->
   </div>
-
-  <footer>
-    Talent Hub rights are reserved and developed by Parth Sabhani ©2025
-  </footer>
+  <!-- Main Card Container End -->
+	
+	<!-- Footer Start -->
+  	<%
+    	request.setAttribute("footerStyle", 
+    			"position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #000000; color: #fff; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
 </body>
 </html>

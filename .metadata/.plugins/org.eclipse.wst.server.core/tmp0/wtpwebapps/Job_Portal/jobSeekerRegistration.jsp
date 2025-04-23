@@ -26,12 +26,12 @@ body {
 .registration-container {
 	background-color: white;
 	padding: 20px;
-	margin: 20px;
+	margin: 40px;
 	border-radius: 8px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	width: 100%;
-	font-size: 12px;
-	max-width: 300px;
+	font-size: 14px;
+	max-width: 350px;
 }
 
 h2 {
@@ -57,11 +57,12 @@ form {
 }
 
 input {
-	padding: 12px 4px;
+	padding: 12px 0px;
+	padding-left: 8px;
 	margin: 0;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	font-size: 10px;
+	font-size: 12px;
 	width: 100%;
 	background-color: #fff; /* Keep the input background white */
 	z-index: 1; /* Ensure the input stays behind the label */
@@ -74,7 +75,7 @@ input:focus {
 
 /* Floating label */
 input:focus+label, input:not(:placeholder-shown)+label {
-	font-size: 10px;
+	font-size: 12px;
 	color: #4d90fe;
 	top: -9px; /* Adjusted to align with the upper edge of the text */
 }
@@ -83,7 +84,7 @@ label {
 	position: absolute;
 	top: 10px; /* Slightly adjusted to align with the text */
 	left: 8px;
-	font-size: 10px;
+	font-size: 12px;
 	transition: all 0.2s ease;
 	color: #999;
 	pointer-events: none;
@@ -99,18 +100,19 @@ label {
 	padding: 12px;
 	border: none;
 	border-radius: 4px;
-	font-size: 16px;
+	font-size: 18px;
 	cursor: pointer;
 }
 
 .submit-btn:hover {
 	background-color: #45a049;
 	color: black;
+	border: 2px solid black;
 }
 
 .error {
 	color: red;
-	font-size: 12px;
+	font-size: 14px;
 	margin-top: -10px; text-align : center;
 	margin-bottom: 12px;
 	text-align: center;
@@ -147,7 +149,7 @@ label {
 				<!-- Age Dropdown -->
 				<div style="flex: 1;">
 					<select name="age" id="age" required
-						style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 10px;">
+						style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;">
 						<option value="" disabled selected hidden>Age</option>
 						<%
 						for (int i = 18; i <= 50; i++) {
@@ -162,7 +164,7 @@ label {
 				<!-- Gender Dropdown -->
 				<div style="flex: 1;">
 					<select name="gender" id="gender" required
-						style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 10px;">
+						style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;">
 						<option value="" disabled selected hidden>Gender</option>
 						<option value="Male">Male</option>
 						<option value="Female">Female</option>
@@ -198,5 +200,12 @@ label {
 		</form>
 	</div>
 
+
+	<!-- Footer Start -->
+	<%
+    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
 </body>
 </html>

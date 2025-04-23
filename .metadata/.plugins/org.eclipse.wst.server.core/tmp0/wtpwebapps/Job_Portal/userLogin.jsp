@@ -140,5 +140,12 @@ h2 {
 		</form>
 	</div>
 
+
+	<!-- Footer Start -->
+	<%
+    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
 </body>
 </html>

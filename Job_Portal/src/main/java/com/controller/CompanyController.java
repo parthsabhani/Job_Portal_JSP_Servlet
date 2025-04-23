@@ -78,7 +78,7 @@ public class CompanyController extends HttpServlet
 			{
 				HttpSession session = request.getSession();
 				session.setAttribute("company", model);
-				response.sendRedirect("jobSeekerDashboard.jsp");
+				response.sendRedirect("companyDashboard.jsp");
 			}else
 			{
 				response.sendRedirect("userLogin.jsp?error=invalid email and password");

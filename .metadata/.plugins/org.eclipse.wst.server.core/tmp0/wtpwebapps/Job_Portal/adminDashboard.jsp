@@ -77,12 +77,14 @@ a:hover {
 	<table>
 		<thead>
 			<tr>
-				<th>Company ID</th>
+				<th>ID</th>
 				<th>Name</th>
 				<th>Email</th>
 				<th>Address</th>
 				<th>Phone</th>
 				<th>Website</th>
+				<th>isApproved</th>
+				<th>isActive</th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -101,6 +103,8 @@ a:hover {
 				<td><a href="<%=company.getWebsite()%>" target="_blank"
 					style="color: #007bff; text-decoration: none;"> <%=company.getWebsite()%>
 				</a></td>
+				<td><%=company.isApproved() %></td>
+				<td><%=company.isActive() %></td>
 				<td>
 					<form action="AdminController" method="post"
 						style="display: inline;">
@@ -112,6 +116,7 @@ a:hover {
 							class="btn reject-btn">Reject</button>
 					</form>
 				</td>
+				
 			</tr>
 			<%
 			}
@@ -126,5 +131,11 @@ a:hover {
 		</tbody>
 	</table>
 
+	<!-- Footer Start -->
+	<%
+    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
 </body>
 </html>

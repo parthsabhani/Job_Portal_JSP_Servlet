@@ -1,0 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<footer style="position: fixed; bottom: 0; width: 100%; padding: 8px 0; color: white; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;">
+    Talent Hub rights are reserved and developed by Parth Sabhani ©2025
+</footer>
+</body>
+</html>

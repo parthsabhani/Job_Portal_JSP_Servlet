@@ -74,7 +74,7 @@ body {
 </style>
 </head>
 <body>
-
+	<!-- Login Card Start -->
 	<div class="login-card">
 		<h2>Admin Login</h2>
 		<form action="AdminController" method="post">
@@ -85,6 +85,13 @@ body {
 			<button type="submit" class="login-btn" name="value" value="adminLogin">Login</button>
 		</form>
 	</div>
-
+	<!-- Login Card End -->
+	
+	<!-- Footer Start -->
+	<%
+    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	%>
+	<jsp:include page="footer.jsp" />
+	<!-- Footer End -->
 </body>
 </html>

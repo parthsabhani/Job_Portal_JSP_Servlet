@@ -32,6 +32,8 @@ public class AdminDao
 			{
 				isValid = true;
 			}
+			
+			c.close();
 		}
 		catch(Exception e)
 		{
@@ -46,7 +48,7 @@ public class AdminDao
 		List<CompanyModel> companies = new ArrayList<>();;
 		
 		c = ConnectionClass.getConnection();
-		String q = "select * from company where isApproved = false";
+		String q = "select * from company";
 		
 		try 
 		{
@@ -63,9 +65,13 @@ public class AdminDao
 			    model.setPhone(rs.getString("phone"));
 			    model.setWebsite(rs.getString("website"));
 			    model.setPassword(rs.getString("password"));
+			    model.setApproved(rs.getBoolean("isApproved"));
+			    model.setActive(rs.getBoolean("isActive"));
 			    
 			    companies.add(model);
 			}
+			
+			c.close();
 		}
 		catch(Exception e)
 		{
@@ -73,5 +79,30 @@ public class AdminDao
 		}
 		
 		return companies;
+	}
+	
+	public int updateStatusCompany(int id, boolean isApproved)
+	{
+		int x =0;
+		
+		c = ConnectionClass.getConnection();
+		String q = "update company set isApproved = ? where companyid = ?";
+		
+		try 
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setBoolean(1, isApproved);
+			ps.setInt(2, id);
+			
+			x = ps.executeUpdate();
+			
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return x;
 	}
 }
