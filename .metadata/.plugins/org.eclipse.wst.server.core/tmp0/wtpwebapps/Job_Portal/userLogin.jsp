@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
+<%@ page session="true" %>
+<%
+    // Clear session every time the login page is loaded
+    session.invalidate();
+
+    // Prevent browser from caching this page
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
+	
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,7 +120,7 @@ h2 {
 <body>
 
 	<div class="login-container">
-		<h2>LOGIN</h2>
+		<h2>USER LOGIN</h2>
 		<form action="UserController" method="post">
 			<!-- Email -->
 			<div class="input-group">
@@ -147,5 +159,16 @@ h2 {
 	%>
 	<jsp:include page="footer.jsp" />
 	<!-- Footer End -->
+	
+<script>
+    window.onload = function () {
+        window.history.forward(); // Push forward in history
+    };
+    
+    history.pushState(null, "", location.href);
+    window.onpopstate = function () {
+        location.replace("home.jsp");
+    };
+</script>
 </body>
 </html>

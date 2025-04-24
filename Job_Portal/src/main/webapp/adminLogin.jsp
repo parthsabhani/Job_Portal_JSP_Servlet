@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+		
+<%@ page session="true" %>
+<%
+    // Clear session every time the login page is loaded
+    session.invalidate();
+
+    // Prevent browser from caching this page
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -93,5 +105,18 @@ body {
 	%>
 	<jsp:include page="footer.jsp" />
 	<!-- Footer End -->
+	
+	
+<script>
+    window.onload = function () {
+        window.history.forward(); // Push forward in history
+    };
+</script>
+<script>
+    history.pushState(null, "", location.href);
+    window.onpopstate = function () {
+        location.replace("adminLogin.jsp");
+    };
+</script>
 </body>
 </html>

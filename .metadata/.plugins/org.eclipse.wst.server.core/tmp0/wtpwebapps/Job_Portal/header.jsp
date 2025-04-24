@@ -154,8 +154,8 @@ body {
 		<div class="right-section">
 			<div class="nav-links">
 				<%
-				String role = (String) request.getAttribute("role");
-				if ("jobseeker".equalsIgnoreCase(role)) {
+				String role = (String) session.getAttribute("role");
+				if ("user".equalsIgnoreCase(role)) {
 				%>
 				<a href="applications.jsp">Applications</a> 
 				<%
@@ -202,8 +202,21 @@ body {
 					▼
 				</button>
 				<div class="dropdown-content">
-					<a href="profile.jsp">View Profile</a> 
-					<a href="logout.jsp">Logout</a>
+					<a href="userProfile.jsp">View Profile</a> 
+					<% 
+					if(role.equalsIgnoreCase("user"))
+					{
+					%>
+						<a href="userLogin.jsp">Logout</a>
+					<% 
+					}
+					else if(role.equalsIgnoreCase("company"))
+					{
+					%>
+						<a href="companyLogin.jsp">Logout</a>
+					<%
+					}
+					%>
 				</div>
 			</div>
 		</div>

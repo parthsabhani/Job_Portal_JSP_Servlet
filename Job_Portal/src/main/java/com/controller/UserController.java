@@ -29,6 +29,7 @@ public class UserController extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		String action = request.getParameter("action");
+		System.out.println("Action : " + action);
 		
 		if(action.equalsIgnoreCase("register"))
 		{
@@ -41,7 +42,7 @@ public class UserController extends HttpServlet
 			if(new UserDao().isEmailExist(email)) 
 			{				
 				request.setAttribute("error", "email already exists");
-				request.getRequestDispatcher("jobSeekerRegistration.jsp").forward(request, response);
+				request.getRequestDispatcher("userRegistration.jsp").forward(request, response);
 			}
 			else
 			{		
@@ -74,7 +75,7 @@ public class UserController extends HttpServlet
 				response.sendRedirect("userLogin.jsp");
 			}else
 			{
-				response.sendRedirect("jobSeekerRegistration.jsp");	
+				response.sendRedirect("userRegistration.jsp");	
 			}
 			
 		} else if(action.equalsIgnoreCase("login"))
@@ -89,13 +90,41 @@ public class UserController extends HttpServlet
 			{
 				HttpSession session = request.getSession();
 				session.setAttribute("model", model);
-				response.sendRedirect("jobSeekerDashboard.jsp");
+				session.setAttribute("role", "user");
+				response.sendRedirect("userDashboard.jsp");
 			}else
 			{
 				response.sendRedirect("userLogin.jsp?error=invalid email and password");
 			}
 		}
+		else if(action.equalsIgnoreCase("deleteUserProfile"))
+		{
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+	            response.sendRedirect("userLogin.jsp");  // Redirect to login page if session is invalid
+	            return;
+	        }
+			
+			UserModel model = (UserModel) session.getAttribute("model");
+			if (model == null) {
+	            response.sendRedirect("userLogin.jsp");  // Redirect to login page if no user found in session
+	            return;
+	        }
+			
+			int x = new UserDao().deleteUserProfile(model.getUserid());
+			
+			if(x > 0)
+			{
+				response.sendRedirect("userRegistration.jsp");
+			}else
+			{
+				response.sendRedirect("userLogin.jsp?error=user not deleted..");
+			}
+			
+			session.invalidate();
+		}
 		
 	}
 
 }
+ 

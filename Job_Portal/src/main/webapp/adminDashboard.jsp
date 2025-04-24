@@ -1,6 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*, com.model.CompanyModel"%>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	String role = (String) session.getAttribute("role");
+  
+	//Check if session is invalid or user is not logged in
+  if (role == null) {
+      response.sendRedirect("adminLogin.jsp");
+      return; 
+  }
+
+%>
+
 <!DOCTYPE html>
 <html>
 <head>

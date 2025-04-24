@@ -14,3 +14,6 @@
 1745307919794	Move 'home.jsp' to 'webapp'
 1745307922034	Move 'jobSeekerRegistration.jsp' to 'webapp'
 1745311581634	Rename resource 'jobSeekerLogin.jsp'
+1745474341366	Rename resource 'jobSeekerDashboard.jsp'
+1745474346917	Rename resource 'jobSeekerRegistration.jsp'
+1745480115558	Delete element

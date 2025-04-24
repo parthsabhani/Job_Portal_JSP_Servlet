@@ -104,4 +104,27 @@ public class UserDao
 		
 		return model;
 	}
+	
+	public int deleteUserProfile(int userId)
+	{
+		int x = 0;
+		
+		c = ConnectionClass.getConnection();
+		String q = "update users set isActive=false where userid = ?";
+		
+		try
+		{			
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setInt(1, userId);
+			
+			x = ps.executeUpdate();
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return x;
+	}
 }

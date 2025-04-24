@@ -100,7 +100,7 @@
     <div class="card">
       <div class="card-title">JOB SEEKER</div>
       <div class="card-buttons">
-        <a href="jobSeekerRegistration.jsp">
+        <a href="userRegistration.jsp">
     		<button type="button">Registration</button>
 		</a>
 
