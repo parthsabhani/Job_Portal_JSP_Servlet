@@ -1,15 +1,24 @@
+
 <%@page import="com.model.UserModel"%>
+<%@page import="com.model.EducationModel"%>
+<%@page import="com.model.ProjectModel"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <%
-UserModel model = (UserModel) session.getAttribute("model"); // You might get this from login logic
+UserModel model = (UserModel) session.getAttribute("model");
+EducationModel emodel = (EducationModel) session.getAttribute("emodel");
+Map<String, Object> userProjects = (Map<String, Object>) session.getAttribute("userProjects");
 
-// Check if session is invalid or user is not logged in
-if (model == null) {
+if (model == null || emodel == null || userProjects == null) {
 	response.sendRedirect("userLogin.jsp");
 	return;
 }
+
+List<ProjectModel> projects = (List<ProjectModel>) userProjects.get("projects");
+List<String> languagesList = (List<String>) userProjects.get("languages");
 %>
 
 <!DOCTYPE html>
@@ -17,17 +26,11 @@ if (model == null) {
 <head>
 <meta charset="UTF-8">
 <title>User Profile</title>
-<!-- Link to Cropper.js CSS -->
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"
-	rel="stylesheet">
-
-<!-- Fonts poppins -->
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
 	rel="stylesheet">
 <style>
-/* Reset */
+
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -35,256 +38,164 @@ if (model == null) {
 }
 
 body {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	background-color: #f4f6f9;
 	font-family: 'Poppins', sans-serif;
-}
-
-/* Card container */
-.card {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	width: 520px;
-	padding: 40px 35px;
-	border-radius: 20px;
-	border: none;
-	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-	background-color: #ffffff;
-	position: relative;
-	transition: all 0.3s ease-in-out;
-}
-
-.card:hover {
-	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* User Details */
-.user-details h1 {
-	margin-bottom: 25px;
-	color: #222;
-	font-size: 38px;
-	font-weight: 600;
-}
-
-.user-details p {
-	margin: 12px 0;
-	color: #555;
-	font-size: 17px;
+	background: linear-gradient(to right, #fdfdfd, #e6f0ff);
+	color: #333;
+	padding: 60px 60px 40px 60px;
 	line-height: 1.6;
 }
 
-.user-details p strong {
+.container {
+	max-width: 1100px;
+	margin: auto;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.header h1 {
+	font-size: 42px;
+	color: #1e3a5f;
+	font-weight: 600;
+}
+
+.section {
+	margin-bottom: 40px;
+	background: #fff;
+	padding: 30px 35px;
+	border-radius: 12px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section h2 {
+	font-size: 24px;
+	color: #007BFF;
+	margin-bottom: 20px;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #007BFF;
+}
+
+p {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+p strong {
 	color: #000;
 	font-weight: 600;
 }
 
-/* Profile Picture Upload */
-.upload-container {
-	position: absolute;
-	top: 30px;
-	right: 30px;
-	width: 90px;
-	height: 90px;
-	border-radius: 50%;
-	overflow: hidden;
-	border: 3px solid #007BFF;
-	background: #f1f1f1;
-	box-shadow: 0 0 12px rgba(0, 123, 255, 0.2);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	transition: all 0.3s ease;
-}
-
-.upload-container:hover {
-	transform: scale(1.05);
-}
-
-.upload-container img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-/* Modal Styles */
-.modal {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.6);
-	justify-content: center;
-	align-items: center;
-	z-index: 1000;
-}
-
-.modal-content {
-	background: #fff;
-	padding: 25px 30px;
-	border-radius: 12px;
-	width: 90%;
-	max-width: 500px;
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h3 {
+.project-entry {
+	background-color: #f4faff;
+	padding: 15px 20px;
+	border-left: 4px solid #007BFF;
+	border-radius: 8px;
 	margin-bottom: 20px;
-	color: #333;
-	font-size: 20px;
-	font-weight: 500;
 }
 
-.modal-content img {
-	width: 100%;
-	border-radius: 10px;
-}
-
-.modal-btns {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 20px;
-}
-
-.modal-btns button {
-	padding: 10px 20px;
-	background-color: #007BFF;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 14px;
-	transition: background-color 0.3s ease;
-}
-
-.modal-btns button:hover {
-	background-color: #0056b3;
-}
-
-/* Action Buttons */
-.card-btn-container {
-	width: 100%;
+/* Button styling */
+.button-group {
 	display: flex;
 	justify-content: flex-end;
-	gap: 15px;
-	margin-top: 35px;
+	gap: 20px;
+	margin-top: 40px;
 }
 
-.edit-btn, .delete-btn {
-	padding: 12px 24px;
-	font-size: 16px;
+.button-group button {
+	padding: 12px 25px;
 	border: none;
-	border-radius: 8px;
+	border-radius: 6px;
+	font-size: 15px;
 	cursor: pointer;
 	font-weight: 500;
-	transition: all 0.3s ease;
+	transition: background 0.3s ease, transform 0.2s ease;
 }
 
-/* Edit Button */
 .edit-btn {
 	background-color: #007BFF;
-	color: #fff;
+	color: white;
 }
 
 .edit-btn:hover {
 	background-color: #0056b3;
 	transform: translateY(-2px);
-	box-shadow: 0 4px 10px rgba(0, 123, 255, 0.25);
 }
 
-/* Delete Button */
 .delete-btn {
 	background-color: #dc3545;
-	color: #fff;
+	color: white;
 }
 
 .delete-btn:hover {
 	background-color: #a71d2a;
 	transform: translateY(-2px);
-	box-shadow: 0 4px 10px rgba(220, 53, 69, 0.25);
 }
 </style>
 </head>
 <body>
 
-	<div class="card">
-		<!-- User Details Section -->
-		<div class="user-details">
+	<div class="container">
+
+		<div class="header">
 			<h1>User Profile</h1>
-
-			<p>
-				<strong>Full Name:</strong>
-				<%=model.getFirstName()%>
-				<%=model.getLastName()%></p>
-			<p>
-				<strong>Email:</strong>
-				<%=model.getEmail()%></p>
-			<p>
-				<strong>Age:</strong>
-				<%=model.getAge()%></p>
-			<p>
-				<strong>Gender:</strong>
-				<%=model.getGender()%></p>
-			<p>
-				<strong>Address:</strong>
-				<%=model.getAddress()%></p>
-			<p>
-				<strong>Phone Number:</strong>
-				<%=model.getPhone()%></p>
-
-
-			<!-- Also Add Education, Experience -->
-
-
 		</div>
 
-		<!-- Profile Picture Upload -->
-		<div class="upload-container">
-			<p style="font-size: 10px;">No Image</p>
-			<%-- <% if (model.getProfileImagePath() != null && !model.getProfileImagePath().isEmpty()) { %>
-    <div class="upload-container">
-        <img id="profileImage" src="<%= model.getProfileImagePath() %>" alt="Profile Picture">
-    </div>
-<% } %> --%>
-
+		<!-- Profile Info -->
+		<div class="section">
+			<h2>Personal Information</h2>
+			<p><strong>Full Name:</strong> <%=model.getFirstName()%> <%=model.getLastName()%></p>
+			<p><strong>Email:</strong> <%=model.getEmail()%></p>
+			<p><strong>Age:</strong> <%=model.getAge()%></p>
+			<p><strong>Gender:</strong> <%=model.getGender()%></p>
+			<p><strong>Address:</strong> <%=model.getAddress()%></p>
+			<p><strong>Phone Number:</strong> <%=model.getPhone()%></p>
 		</div>
 
+		<!-- Education -->
+		<div class="section">
+			<h2>Education</h2>
+			<p><strong>Institute:</strong> <%=emodel.getInstituteName()%></p>
+			<p><strong>Degree:</strong> <%=emodel.getDegreeName()%></p>
+			<p><strong>Description:</strong> <%=emodel.getDegreeDescription()%></p>
+			<p><strong>Passout Year:</strong> <%=emodel.getPassoutYear()%></p>
+		</div>
 
+		<!-- Projects -->
+		<div class="section">
+			<h2>Projects</h2>
+			<% for (int i = 0; i < projects.size(); i++) {
+				ProjectModel p = projects.get(i);
+				String langs = languagesList.get(i);
+			%>
+				<div class="project-entry">
+					<p><strong>Project Name:</strong> <%=p.getName()%></p>
+					<p><strong>Description:</strong> <%=p.getDescription()%></p>
+					<p><strong>Languages Used:</strong> <%=langs%></p>
+				</div>
+			<% } %>
+		</div>
 
-		<!-- Button Container -->
-		<div class="card-btn-container">
-			<button class="edit-btn" name="action" value="editProfile"
-				onclick="window.location.href='editUserProfile.jsp'">Edit
-				Profile</button>
-
-			<form id="deleteForm" action="UserController" method="post">
+		<!-- Buttons -->
+		<div class="button-group">
+			<button class="edit-btn" onclick="window.location.href='editUserProfile.jsp'">Edit Profile</button>
+			<form id="deleteForm" action="UserController" method="post" style="display:inline;">
 				<input type="hidden" name="action" value="deleteUserProfile">
-				<button type="button" class="delete-btn" onclick="confirmDelete()">Delete
-					Profile</button>
+				<button type="button" class="delete-btn" onclick="confirmDelete()">Delete Profile</button>
 			</form>
-
 		</div>
 
 	</div>
 
-	<!-- Alert for user delete profile -->
 	<script>
 		function confirmDelete() {
 			if (confirm("Are you sure you want to delete your profile?")) {
-				// Submit the form only if confirmed
 				document.getElementById("deleteForm").submit();
-			} else {
-				return false;
 			}
 		}
 	</script>
+
 
 </body>
 </html>

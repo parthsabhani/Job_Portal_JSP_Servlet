@@ -1,0 +1,7 @@
+package com.model;
+
+public class ProjectModel 
+{
+	private int projectid;
+	private String name, description;
+}

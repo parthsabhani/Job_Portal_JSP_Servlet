@@ -47,6 +47,7 @@ public class AdminController extends HttpServlet
 				
 				List<CompanyModel> companyList = admin.getAllCompanies();
 				request.setAttribute("companyList", companyList);
+				
 				request.getRequestDispatcher("adminDashboard.jsp").forward(request, response);
 			}
 			else

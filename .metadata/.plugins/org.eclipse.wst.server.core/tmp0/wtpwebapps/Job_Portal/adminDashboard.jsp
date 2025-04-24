@@ -2,18 +2,15 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*, com.model.CompanyModel"%>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%
-	String role = (String) session.getAttribute("role");
-  
-	//Check if session is invalid or user is not logged in
-  if (role == null) {
-      response.sendRedirect("adminLogin.jsp");
-      return; 
-  }
 
+<%
+String role = (String) session.getAttribute("role");
+
+//Check if session is invalid or user is not logged in
+if (role == null) {
+	response.sendRedirect("adminLogin.jsp");
+	return;
+}
 %>
 
 <!DOCTYPE html>
@@ -21,36 +18,73 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin Dashboard</title>
+
 <style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap')
+	;
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	font-family: 'Poppins', sans-serif;
-	background-color: #f8f9fa;
-	margin: 0;
-	padding: 20px;
+	background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+	padding: 40px 60px;
+	color: #333;
+}
+
+h2 {
+	text-align: center;
+	font-size: 32px;
+	color: #1e3a5f;
+	margin-bottom: 40px;
 }
 
 table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-top: 30px;
-	background-color: white;
-	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-	border: 2px solid black;
+	background: white;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+	overflow: hidden;
+	border: 2px solid #ddd; /* Border around the entire table */
 }
 
 th, td {
-	padding: 12px 15px;
+	padding: 16px 20px;
 	text-align: left;
-	border: 1px solid black;
+	font-size: 15px;
 }
 
 th {
-	background-color: #2c3e50;
+	background-color: #007BFF;
 	color: white;
+	text-transform: uppercase;
+	font-size: 14px;
+	letter-spacing: 1px;
+	border-right: 1px solid #ddd; /* Border to separate columns */
+}
+
+td {
+	border-right: 1px solid #ddd; /* Border to separate columns */
+}
+
+tr:last-child td {
+	border-bottom: none; /* Remove bottom border for the last row */
 }
 
 tr:hover {
-	background-color: #f1f1f1;
+	background-color: #f1f9ff;
+	transition: background 0.2s ease-in-out;
+}
+
+a {
+	color: #007bff;
+	text-decoration: none;
 }
 
 a:hover {
@@ -59,12 +93,14 @@ a:hover {
 }
 
 .btn {
-	padding: 6px 12px;
+	padding: 8px 16px;
 	border: none;
 	border-radius: 5px;
 	color: white;
 	cursor: pointer;
 	font-weight: 500;
+	font-size: 14px;
+	transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .approve-btn {
@@ -73,6 +109,7 @@ a:hover {
 
 .approve-btn:hover {
 	background-color: #218838;
+	transform: translateY(-1px);
 }
 
 .reject-btn {
@@ -81,13 +118,41 @@ a:hover {
 
 .reject-btn:hover {
 	background-color: #c82333;
+	transform: translateY(-1px);
+}
+
+tfoot td {
+	text-align: center;
+	color: #666;
+	padding: 20px;
+	font-style: italic;
+}
+
+/* Adding a strong bottom border for rows */
+tr {
+	border-bottom: 2px solid #f1f1f1;
+}
+
+/* Adding a border for buttons */
+.btn {
+	border: 1px solid #ddd;
+}
+
+.btn:hover {
+	border: 1px solid #ccc;
+}
+
+/* Removing bottom border from last row */
+tr:last-child td {
+	border-bottom: none;
 }
 </style>
+
 
 </head>
 <body>
 
-	<h2>Company List</h2>
+	<h2 class="dashboard-title">Company List</h2>
 
 	<table>
 		<thead>
@@ -118,8 +183,8 @@ a:hover {
 				<td><a href="<%=company.getWebsite()%>" target="_blank"
 					style="color: #007bff; text-decoration: none;"> <%=company.getWebsite()%>
 				</a></td>
-				<td><%=company.isApproved() %></td>
-				<td><%=company.isActive() %></td>
+				<td><%=company.isApproved()%></td>
+				<td><%=company.isActive()%></td>
 				<td>
 					<form action="AdminController" method="post"
 						style="display: inline;">
@@ -131,7 +196,7 @@ a:hover {
 							class="btn reject-btn">Reject</button>
 					</form>
 				</td>
-				
+
 			</tr>
 			<%
 			}
@@ -148,9 +213,12 @@ a:hover {
 
 	<!-- Footer Start -->
 	<%
-    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	// Define the style for the footer directly in the JSP request
+	request.setAttribute("footerStyle",
+			"position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
 	%>
 	<jsp:include page="footer.jsp" />
 	<!-- Footer End -->
+
 </body>
 </html>

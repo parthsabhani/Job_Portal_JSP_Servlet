@@ -1,0 +1,251 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*, com.model.CompanyModel"%>
+
+<%
+    String role = (String) session.getAttribute("role");
+
+    // Check if session is invalid or user is not logged in
+    if (role == null) {
+        response.sendRedirect("adminLogin.jsp");
+        return;
+    }
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            padding: 40px 60px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #1e3a5f;
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ddd; /* Border around the entire table */
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+            border-right: 1px solid #ddd; /* Border to separate columns */
+        }
+
+        td {
+            border-right: 1px solid #ddd; /* Border to separate columns */
+        }
+
+        tr:last-child td {
+            border-bottom: none; /* Remove bottom border for the last row */
+        }
+
+        tr:hover {
+            background-color: #f1f9ff;
+            transition: background 0.2s ease-in-out;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .approve-btn {
+            background-color: #28a745;
+        }
+
+        .approve-btn:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+
+        .reject-btn {
+            background-color: #dc3545;
+        }
+
+        .reject-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+
+        tfoot td {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* Adding a strong bottom border for rows */
+        tr {
+            border-bottom: 2px solid #f1f1f1;
+        }
+
+        /* Adding a border for buttons */
+        .btn {
+            border: 1px solid #ddd;
+        }
+
+        .btn:hover {
+            border: 1px solid #ccc;
+        }
+
+        /* Removing bottom border from last row */
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .dropdown {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown">
+        <form action="AdminController" method="post">
+            <select name="viewOption" onchange="this.form.submit()">
+                <option value="companyList" <%= request.getParameter("viewOption") != null && request.getParameter("viewOption").equals("companyList") ? "selected" : "" %>>Company List</option>
+                <option value="userList" <%= request.getParameter("viewOption") != null && request.getParameter("viewOption").equals("userList") ? "selected" : "" %>>User List</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- Table for Company List or User List -->
+    <h2 class="dashboard-title">
+        <%= (request.getParameter("viewOption") != null && request.getParameter("viewOption").equals("userList")) ? "User List" : "Company List" %>
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Website</th>
+                <th>isApproved</th>
+                <th>isActive</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                // Check the selected view option (either companyList or userList)
+                String viewOption = request.getParameter("viewOption");
+                if ("companyList".equals(viewOption)) {
+                    List<CompanyModel> companyList = (List<CompanyModel>) request.getAttribute("companyList");
+                    if (companyList != null && !companyList.isEmpty()) {
+                        for (CompanyModel company : companyList) {
+            %>
+            <tr>
+                <td><%= company.getCompanyid() %></td>
+                <td><%= company.getName() %></td>
+                <td><%= company.getEmail() %></td>
+                <td><%= company.getAddress() %></td>
+                <td><%= company.getPhone() %></td>
+                <td><a href="<%= company.getWebsite() %>" target="_blank" style="color: #007bff; text-decoration: none;"> <%= company.getWebsite() %> </a></td>
+                <td><%= company.isApproved() %></td>
+                <td><%= company.isActive() %></td>
+                <td>
+                    <form action="AdminController" method="post" style="display: inline;">
+                        <input type="hidden" name="companyId" value="<%= company.getCompanyid() %>">
+                        <button type="submit" name="action" value="approve" class="btn approve-btn">Approve</button>
+                        <button type="submit" name="action" value="reject" class="btn reject-btn">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            <%
+                        }
+                    } else {
+            %>
+            <tr>
+                <td colspan="9" style="text-align: center;">No companies found.</td>
+            </tr>
+            <%
+                    }
+                } else if ("userList".equals(viewOption)) {
+                    // Handle user list display logic here
+                    // Example: Fetch and display user list (this would be based on the actual implementation in your system)
+                    // For now, it's just a placeholder
+            %>
+            <tr>
+                <td colspan="9" style="text-align: center;">User list would go here</td>
+            </tr>
+            <%
+                }
+            %>
+        </tbody>
+    </table>
+
+    <!-- Footer Start -->
+    <%
+        request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+    %>
+    <jsp:include page="footer.jsp" />
+    <!-- Footer End -->
+
+</body>
+</html>

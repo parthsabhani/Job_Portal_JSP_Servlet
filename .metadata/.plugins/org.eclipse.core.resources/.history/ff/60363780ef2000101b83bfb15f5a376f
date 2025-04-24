@@ -1,0 +1,16 @@
+package com.model;
+
+public class EducationModel 
+{
+	private String instituteName;
+	private Integer passoutYear;
+	private String degreeName;
+	private String degreeDescription;
+
+	// Getters
+	public String getInstituteName() { return instituteName; }
+	public Integer getPassoutYear() { return passoutYear; }
+	public String getDegreeName() { return degreeName; }
+	public String getDegreeDescription() { return degreeDescription; }
+
+}

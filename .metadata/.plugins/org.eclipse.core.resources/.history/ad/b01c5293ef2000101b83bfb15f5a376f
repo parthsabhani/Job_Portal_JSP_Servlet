@@ -1,0 +1,9 @@
+package com.model;
+
+public class EducationModel 
+{
+	private int passoutYear;
+	private String instituteName, degreeName, degreeDescription;
+
+
+}

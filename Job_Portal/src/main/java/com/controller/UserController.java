@@ -8,8 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import com.dao.UserDao;
+import com.model.EducationModel;
+import com.model.ProjectModel;
 import com.model.UserModel;
 
 @WebServlet("/UserController")
@@ -30,6 +34,7 @@ public class UserController extends HttpServlet
 	{
 		String action = request.getParameter("action");
 		System.out.println("Action : " + action);
+		UserDao userDao =  new UserDao();
 		
 		if(action.equalsIgnoreCase("register"))
 		{
@@ -84,14 +89,22 @@ public class UserController extends HttpServlet
 			lmodel.setEmail(request.getParameter("email"));
 			lmodel.setPassword(request.getParameter("password"));
 			
-			UserModel model = new UserDao().userLogin(lmodel.getEmail(), lmodel.getPassword());
+			UserModel model = userDao.userLogin(lmodel.getEmail(), lmodel.getPassword());	
 			
 			if(model != null)
 			{
-				HttpSession session = request.getSession();
-				session.setAttribute("model", model);
-				session.setAttribute("role", "user");
-				response.sendRedirect("userDashboard.jsp");
+				EducationModel emodel = userDao.getUserEducation(model.getUserid());
+				Map<String, Object> userProjects= userDao.getUserProject(model.getUserid());
+				System.out.println(userProjects);
+				if (emodel != null && userProjects != null)
+				{					
+					HttpSession session = request.getSession();
+					session.setAttribute("model", model);
+					session.setAttribute("emodel", emodel);
+					session.setAttribute("userProjects", userProjects);
+					session.setAttribute("role", "user");
+					response.sendRedirect("userDashboard.jsp");
+				}
 			}else
 			{
 				response.sendRedirect("userLogin.jsp?error=invalid email and password");

@@ -3,7 +3,13 @@ package com.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.model.EducationModel;
+import com.model.ProjectModel;
 import com.model.UserModel;
 import com.util.ConnectionClass;
 
@@ -127,4 +133,92 @@ public class UserDao
 		
 		return x;
 	}
+
+	// Get user education
+	public EducationModel getUserEducation(int userId)
+	{
+		EducationModel emodel = null;
+		
+		c = ConnectionClass.getConnection();
+		String q = "SELECT e.educationid, e.institutionname, e.degreename, e.degreedescription, e.passoutyear "
+				+ "FROM education e "
+				+ "JOIN users s ON s.educationid = e.educationid "
+				+ "WHERE s.userid = ?; "; 
+		
+		try 
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setInt(1, userId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+				emodel = new EducationModel();
+				emodel.setInstituteName(rs.getString("institutionname"));
+				emodel.setDegreeName(rs.getString("degreename"));
+				emodel.setDegreeDescription(rs.getString("degreedescription"));
+				emodel.setPassoutYear(rs.getInt("passoutyear"));
+			}
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return emodel;
+	}
+
+	// Get user project
+	public Map<String, Object> getUserProject(int userId)
+	{
+		List<ProjectModel> projectList = new ArrayList<ProjectModel>();
+		List<String> projectLanguagesList = new ArrayList<>(); 
+		
+		c = ConnectionClass.getConnection();
+		String q = "SELECT p.projectid, p.name, p.description, "
+		         + "string_agg((SELECT cl.languagename FROM codinglanguage cl "
+		         + "WHERE cl.codinglanguageid = pl.codinglanguageid) , ', ') AS languages "
+		         + "FROM project p "
+		         + "JOIN userproject up ON p.projectid = up.projectid "
+		         + "JOIN projectlanguage pl ON p.projectid = pl.projectid "
+		         + "WHERE up.userid = ? "
+		         + "GROUP BY p.projectid, p.name, p.description";
+		
+		try
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setInt(1, userId);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+				ProjectModel pmodel = new ProjectModel();
+				pmodel.setProjectid(rs.getInt("projectid"));
+				pmodel.setName(rs.getString("name"));
+				pmodel.setDescription(rs.getString("description"));
+				System.out.println(rs.getInt("projectid") + " "+ rs.getString("name") 
+					+ " "+ rs.getString("description") + " " + rs.getString("languages"));
+				String languages = rs.getString("languages");
+                projectLanguagesList.add(languages);
+                
+				projectList.add(pmodel);
+			}
+			c.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> userProjects= new HashMap();
+		userProjects.put("projects", projectList);
+		userProjects.put("languages", projectLanguagesList);
+		
+		return userProjects;
+	}
+
 }
+

@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-		
-<%@ page session="true" %>
-<%
-    // Clear session every time the login page is loaded
-    session.invalidate();
 
-    // Prevent browser from caching this page
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);
+<%@ page session="true"%>
+<%
+// Clear session every time the login page is loaded
+session.invalidate();
+
+// Prevent browser from caching this page
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+response.setHeader("Pragma", "no-cache");
+response.setDateHeader("Expires", 0);
 %>
 
 <!DOCTYPE html>
@@ -98,25 +98,26 @@ body {
 		</form>
 	</div>
 	<!-- Login Card End -->
-	
+
 	<!-- Footer Start -->
 	<%
-    	request.setAttribute("footerStyle", "position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
+	request.setAttribute("footerStyle",
+			"position: fixed; bottom: 0; width: 100%; padding: 10px 0; background-color: #f0f2f5; color: #000000; text-align: center; font-size: 12px; font-family: 'Poppins', sans-serif;");
 	%>
 	<jsp:include page="footer.jsp" />
 	<!-- Footer End -->
-	
-	
-<script>
-    window.onload = function () {
-        window.history.forward(); // Push forward in history
-    };
-</script>
-<script>
-    history.pushState(null, "", location.href);
-    window.onpopstate = function () {
-        location.replace("adminLogin.jsp");
-    };
-</script>
+
+
+	<script>
+		window.onload = function() {
+			window.history.forward(); // Push forward in history
+		};
+	</script>
+	<script>
+		history.pushState(null, "", location.href);
+		window.onpopstate = function() {
+			location.replace("adminLogin.jsp");
+		};
+	</script>
 </body>
 </html>
