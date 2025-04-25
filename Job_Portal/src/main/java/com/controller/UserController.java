@@ -38,106 +38,152 @@ public class UserController extends HttpServlet
 		
 		if(action.equalsIgnoreCase("register"))
 		{
-			UserModel rmodel = new UserModel();
+			userRegistration(request, response, userDao);
 			
-			rmodel.setFirstName(request.getParameter("firstName"));
-			rmodel.setLastName(request.getParameter("lastName"));
-			
-			String email = request.getParameter("email");
-			if(new UserDao().isEmailExist(email)) 
-			{				
-				request.setAttribute("error", "email already exists");
-				request.getRequestDispatcher("userRegistration.jsp").forward(request, response);
-			}
-			else
-			{		
-//				System.out.println("email added");
-				rmodel.setEmail(email);
-			}
-			
-			String ageParam = request.getParameter("age");
-			if (ageParam != null && !ageParam.isEmpty()) {
-			    rmodel.setAge(Integer.parseInt(ageParam));
-			} else {
-			    rmodel.setAge(0); // no age input
-			}
-			
-			String gender = request.getParameter("gender");
-			if (gender != null && !gender.isEmpty()) {
-				rmodel.setGender(gender);
-			} else {
-				rmodel.setGender(null); // gender not entered
-			}
-			
-			rmodel.setAddress(request.getParameter("address"));
-			rmodel.setPhone(request.getParameter("phone"));
-			rmodel.setPassword(request.getParameter("password"));
-			
-			int x = new UserDao().userRegistration(rmodel);
-			
-			if(x > 0)
-			{
-				response.sendRedirect("userLogin.jsp");
-			}else
-			{
-				response.sendRedirect("userRegistration.jsp");	
-			}
-			
-		} else if(action.equalsIgnoreCase("login"))
+		} 
+		else if(action.equalsIgnoreCase("login"))
 		{
-			UserModel lmodel = new UserModel();
-			lmodel.setEmail(request.getParameter("email"));
-			lmodel.setPassword(request.getParameter("password"));
-			
-			UserModel model = userDao.userLogin(lmodel.getEmail(), lmodel.getPassword());	
-			
-			if(model != null)
-			{
-				EducationModel emodel = userDao.getUserEducation(model.getUserid());
-				Map<String, Object> userProjects= userDao.getUserProject(model.getUserid());
-				System.out.println(userProjects);
-				if (emodel != null && userProjects != null)
-				{					
-					HttpSession session = request.getSession();
-					session.setAttribute("model", model);
-					session.setAttribute("emodel", emodel);
-					session.setAttribute("userProjects", userProjects);
-					session.setAttribute("role", "user");
-					response.sendRedirect("userDashboard.jsp");
-				}
-			}else
-			{
-				response.sendRedirect("userLogin.jsp?error=invalid email and password");
-			}
+			userLogin(request, response, userDao);
+		
 		}
 		else if(action.equalsIgnoreCase("deleteUserProfile"))
 		{
-			HttpSession session = request.getSession(false);
-			if (session == null) {
-	            response.sendRedirect("userLogin.jsp");  // Redirect to login page if session is invalid
-	            return;
-	        }
+			deleteUserProfile(request, response, userDao);
 			
-			UserModel model = (UserModel) session.getAttribute("model");
-			if (model == null) {
-	            response.sendRedirect("userLogin.jsp");  // Redirect to login page if no user found in session
-	            return;
-	        }
+		}
+		else if(action.equalsIgnoreCase("deleteProject"))
+		{
+			deleteProject(request, response, userDao);
 			
-			int x = new UserDao().deleteUserProfile(model.getUserid());
-			
-			if(x > 0)
-			{
-				response.sendRedirect("userRegistration.jsp");
-			}else
-			{
-				response.sendRedirect("userLogin.jsp?error=user not deleted..");
-			}
-			
-			session.invalidate();
 		}
 		
 	}
+	
+	public void userRegistration(HttpServletRequest request, HttpServletResponse response, UserDao userDao) throws ServletException, IOException
+	{
+		UserModel rmodel = new UserModel();
+		
+		rmodel.setFirstName(request.getParameter("firstName"));
+		rmodel.setLastName(request.getParameter("lastName"));
+		
+		String email = request.getParameter("email");
+		if(userDao.isEmailExist(email)) 
+		{				
+			request.setAttribute("error", "email already exists");
+			request.getRequestDispatcher("userRegistration.jsp").forward(request, response);
+		}
+		else
+		{		
+//			System.out.println("email added");
+			rmodel.setEmail(email);
+		}
+		
+		String ageParam = request.getParameter("age");
+		if (ageParam != null && !ageParam.isEmpty()) {
+		    rmodel.setAge(Integer.parseInt(ageParam));
+		} else {
+		    rmodel.setAge(0); // no age input
+		}
+		
+		String gender = request.getParameter("gender");
+		if (gender != null && !gender.isEmpty()) {
+			rmodel.setGender(gender);
+		} else {
+			rmodel.setGender(null); // gender not entered
+		}
+		
+		rmodel.setAddress(request.getParameter("address"));
+		rmodel.setPhone(request.getParameter("phone"));
+		rmodel.setPassword(request.getParameter("password"));
+		
+		int x = new UserDao().userRegistration(rmodel);
+		
+		if(x > 0)
+		{
+			response.sendRedirect("userLogin.jsp");
+		}else
+		{
+			response.sendRedirect("userRegistration.jsp");	
+		}
+	}
 
+	public void userLogin(HttpServletRequest request, HttpServletResponse response, UserDao userDao) throws ServletException, IOException
+	{
+		UserModel lmodel = new UserModel();
+		lmodel.setEmail(request.getParameter("email"));
+		lmodel.setPassword(request.getParameter("password"));
+		
+		UserModel model = userDao.userLogin(lmodel.getEmail(), lmodel.getPassword());	
+		
+		if(model != null)
+		{
+			EducationModel emodel = userDao.getUserEducation(model.getUserid());
+			Map<String, Object> userProjects= userDao.getUserProject(model.getUserid());
+			
+			System.out.println(userProjects);
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("model", model);
+			session.setAttribute("role", "user");
+			
+			if (emodel != null && userProjects != null)
+			{					
+				session.setAttribute("emodel", emodel);
+				session.setAttribute("userProjects", userProjects);
+			}
+			response.sendRedirect("userDashboard.jsp");
+		}else
+		{
+			response.sendRedirect("userLogin.jsp?error=invalid email and password");
+		}
+	}
+
+	public void deleteUserProfile(HttpServletRequest request, HttpServletResponse response, UserDao userDao) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+            response.sendRedirect("userLogin.jsp");  // Redirect to login page if session is invalid
+            return;
+        }
+		
+		UserModel model = (UserModel) session.getAttribute("model");
+		if (model == null) {
+            response.sendRedirect("userLogin.jsp");  // Redirect to login page if no user found in session
+            return;
+        }
+		
+		int x = userDao.deleteUserProfile(model.getUserid());
+		
+		if(x > 0)
+		{
+			response.sendRedirect("userRegistration.jsp");
+		}else
+		{
+			response.sendRedirect("userLogin.jsp?error=user not deleted..");
+		}
+		
+		session.invalidate();
+	}
+
+	public void deleteProject(HttpServletRequest request, HttpServletResponse response, UserDao userDao) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+            response.sendRedirect("userLogin.jsp");  // Redirect to login page if session is invalid
+            return;
+        }
+		
+		int x = userDao.deleteProject(Integer.parseInt(request.getParameter("projectId")));
+		
+		if(x > 0)
+		{
+			UserModel model = (UserModel) session.getAttribute("model");
+			Map<String, Object> userProjects= userDao.getUserProject(model.getUserid());
+			
+			session.setAttribute("userProjects", userProjects);
+			response.sendRedirect("editUserProfile.jsp");
+		}
+
+	}
 }
  

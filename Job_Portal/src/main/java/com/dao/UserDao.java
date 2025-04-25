@@ -183,7 +183,7 @@ public class UserDao
 		         + "FROM project p "
 		         + "JOIN userproject up ON p.projectid = up.projectid "
 		         + "JOIN projectlanguage pl ON p.projectid = pl.projectid "
-		         + "WHERE up.userid = ? "
+		         + "WHERE up.userid = ? and p.isactive = true and pl.isactive = true "
 		         + "GROUP BY p.projectid, p.name, p.description";
 		
 		try
@@ -218,6 +218,38 @@ public class UserDao
 		userProjects.put("languages", projectLanguagesList);
 		
 		return userProjects;
+	}
+
+	// Delete user project
+	// User Project Delete
+	public int deleteProject(int projectId)
+	{
+		int x =0;
+		
+		c = ConnectionClass.getConnection();
+		String q1 = "update project set isactive = false where projectid = ?";		
+		String q2 = "update projectlanguage set isactive = false where projectid = ?";
+		
+		try 
+		{
+			PreparedStatement ps1 = c.prepareStatement(q1);
+			ps1.setInt(1, projectId);
+			
+			PreparedStatement ps2 = c.prepareStatement(q2);
+			ps2.setInt(1, projectId);
+			
+			// if both query execute
+			if(ps1.executeUpdate() > 0 && ps2.executeUpdate() > 0)
+			{				
+				x = ps1.executeUpdate();
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return x;
 	}
 
 }

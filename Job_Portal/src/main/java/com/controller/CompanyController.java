@@ -78,6 +78,7 @@ public class CompanyController extends HttpServlet
 			{
 				HttpSession session = request.getSession();
 				session.setAttribute("model", model);
+				session.setAttribute("role", "company");
 				response.sendRedirect("companyDashboard.jsp");
 			}else
 			{

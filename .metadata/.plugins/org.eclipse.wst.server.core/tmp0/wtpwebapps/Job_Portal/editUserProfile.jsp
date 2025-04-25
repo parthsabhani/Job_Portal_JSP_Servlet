@@ -25,14 +25,16 @@ if (model == null || emodel == null || userProjects == null) {
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
 	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" />
+
 <style>
- /* Reset */ * {
+* {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 }
 
-/* Page styling */
 body {
 	font-family: 'Poppins', sans-serif;
 	background: linear-gradient(to right, #fdfdfd, #e6f0ff);
@@ -40,13 +42,11 @@ body {
 	color: #333;
 }
 
-/* Form container takes full width */
 form {
 	max-width: 1000px;
 	margin: 0 auto;
 }
 
-/* Headings */
 h2 {
 	font-size: 36px;
 	color: #1e3a5f;
@@ -55,7 +55,6 @@ h2 {
 	text-align: center;
 }
 
-/* Section headers */
 h3 {
 	margin-top: 50px;
 	font-size: 24px;
@@ -65,7 +64,6 @@ h3 {
 	margin-bottom: 20px;
 }
 
-/* Labels & inputs */
 label {
 	display: block;
 	margin-bottom: 6px;
@@ -91,7 +89,6 @@ input:focus, textarea:focus, select:focus {
 	box-shadow: 0 0 5px rgba(0, 123, 255, 0.15);
 }
 
-/* Side-by-side fields */
 .flex-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -104,7 +101,6 @@ input:focus, textarea:focus, select:focus {
 	min-width: 200px;
 }
 
-/* Buttons */
 .form-actions {
 	text-align: center;
 	margin-top: 40px;
@@ -112,8 +108,8 @@ input:focus, textarea:focus, select:focus {
 
 .form-actions button {
 	padding: 12px 25px;
-	background-color: #007BFF;
-	color: white;
+	background-color: #28a745;
+	color: black;
 	border: none;
 	border-radius: 6px;
 	font-size: 16px;
@@ -122,18 +118,55 @@ input:focus, textarea:focus, select:focus {
 }
 
 .form-actions button:hover {
-	background-color: #0056b3;
+	background-color: #218838;
 	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+	border: 2px solid black;
+	box-shadow: 0 4px 12px rgba(72, 180, 97, 0.2);
 }
 
-/* Project section visual grouping */
 .project-block {
 	background-color: #f4faff;
 	border-left: 5px solid #007BFF;
 	padding: 20px;
 	margin-bottom: 25px;
 	border-radius: 8px;
+}
+
+#addProjectBtn {
+	margin-top: 10px;
+	display: inline-block;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 18px;
+	cursor: pointer;
+	font-size: 15px;
+	transition: background-color 0.3s ease;
+}
+
+#addProjectBtn:hover {
+	background-color: #0056b3;
+}
+
+.project-block .delete-btn {
+	margin-top: 10px;
+	background-color: #dc3545;
+	color: white;
+	border: none;
+	padding: 8px 15px;
+	font-size: 14px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.project-block .delete-btn:hover {
+	background-color: #c82333;
+}
+
+.project-block form {
+	margin-top: 10px;
+	text-align: right;
 }
 </style>
 </head>
@@ -152,13 +185,11 @@ input:focus, textarea:focus, select:focus {
 				for="email">Email:</label> <input type="email" id="email"
 				name="email" value="<%=model.getEmail()%>" required>
 
-			<!-- Age & Gender side-by-side -->
 			<div class="flex-row">
 				<div class="flex-item">
 					<label for="age">Age:</label> <input type="number" id="age"
 						name="age" value="<%=model.getAge()%>" required>
 				</div>
-
 				<div class="flex-item">
 					<label for="gender">Gender:</label> <select id="gender"
 						name="gender">
@@ -178,12 +209,11 @@ input:focus, textarea:focus, select:focus {
 			<label for="phone">Phone Number:</label> <input type="text"
 				id="phone" name="phone" value="<%=model.getPhone()%>" required>
 
-			<!-- Education Section -->
-			<h3 style="margin: 30px 0px;">Education</h3>
+			<h3>Education</h3>
 
 			<label for="instituteName">Institute Name:</label> <input type="text"
 				id="instituteName" name="instituteName"
-				value="<%=(emodel.getInstituteName() != null && !emodel.getInstituteName().isEmpty()) ? emodel.getInstituteName() : ""%>">
+				value="<%=emodel.getInstituteName()%>">
 
 			<div class="flex-row">
 				<div class="flex-item">
@@ -201,58 +231,147 @@ input:focus, textarea:focus, select:focus {
 						%>
 					</select>
 				</div>
-
 				<div class="flex-item">
 					<label for="degreeName">Degree Name:</label> <input type="text"
 						id="degreeName" name="degreeName"
-						value="<%=(emodel.getDegreeName() != null && !emodel.getDegreeName().isEmpty()) ? emodel.getDegreeName() : ""%>">
+						value="<%=emodel.getDegreeName()%>">
 				</div>
 			</div>
 
 			<label for="degreeDescription">Degree Description:</label> <input
 				type="text" id="degreeDescription" name="degreeDescription"
-				value="<%=(emodel.getDegreeDescription() != null && !emodel.getDegreeDescription().isEmpty())
-		? emodel.getDegreeDescription()
-		: ""%>">
+				value="<%=emodel.getDegreeDescription()%>">
 
-			<h3 style="margin: 30px 0px;">Projects</h3>
+			<h3>Projects</h3>
 
-			<%
-			List<ProjectModel> projects = (List<ProjectModel>) userProjects.get("projects");
-			List<String> languagesList = (List<String>) userProjects.get("languages");
+			<div id="projectsContainer">
+				<%
+				List<ProjectModel> projects = (List<ProjectModel>) userProjects.get("projects");
+				List<String> languagesList = (List<String>) userProjects.get("languages");
 
-			for (int i = 0; i < projects.size(); i++) {
-				ProjectModel p = projects.get(i);
-				String langs = languagesList.get(i);
-			%>
-			<div style="margin-bottom: 25px;">
-				<label for="projectName<%=i%>"><strong>Project
-						Name:</strong></label> <input type="text" id="projectName<%=i%>"
-					name="projectName<%=i%>" value="<%=p.getName()%>" required>
+				for (int i = 0; i < projects.size(); i++) {
+					ProjectModel p = projects.get(i);
+					String langs = languagesList.get(i);
+				%>
+				<div class="project-block">
+					<label for="projectName<%=i%>"><strong>Project
+							Name:</strong></label> <input type="text" id="projectName<%=i%>"
+						name="projectName<%=i%>" value="<%=p.getName()%>" required>
 
-				<label for="projectDesc<%=i%>" style="margin-top: 10px;"><strong>Project
-						Description:</strong></label>
-				<textarea id="projectDesc<%=i%>" name="projectDesc<%=i%>" rows="3"
-					required><%=p.getDescription()%></textarea>
+					<label for="projectDesc<%=i%>"><strong>Project
+							Description:</strong></label>
+					<textarea id="projectDesc<%=i%>" name="projectDesc<%=i%>" rows="3"
+						required><%=p.getDescription()%></textarea>
 
-				<label for="projectLang<%=i%>" style="margin-top: 10px;"><strong>Coding
-						Languages:</strong></label> <input type="text" id="projectLang<%=i%>"
-					name="projectLang<%=i%>" value="<%=langs%>" required> <input
-					type="hidden" name="projectId<%=i%>" value="<%=p.getProjectid()%>">
+					<label for="projectLang<%=i%>"><strong>Coding
+							Languages:</strong></label> <input type="text" id="projectLang<%=i%>"
+						name="projectLang<%=i%>" class="tag-input" value="<%=langs%>"
+						required> <input type="hidden" name="projectId<%=i%>"
+						value="<%=p.getProjectid()%>">
+
+					<button type="button"
+						onclick="deleteProject('<%=p.getProjectid()%>')"
+						style="background-color: #dc3545; color: white; border: none; margin-left: 50px; border-radius: 4px; padding: 10px 20px; cursor: pointer;">
+						Delete</button>
+				</div>
+				<%
+				}
+				%>
 			</div>
-			<%
-			}
-			%>
 
-			<input type="hidden" name="projectCount" value="<%=projects.size()%>">
-
+			<!-- Add Project Button -->
+			<button type="button" id="addProjectBtn">+ Add Project</button>
+			<input type="hidden" id="projectCount" name="projectCount"
+				value="<%=projects.size()%>">
 
 			<div class="form-actions">
-				<button type="submit" name="action" value="updateUserProfile">Update
-					Profile</button>
+				<button type="submit">Update Profile</button>
 			</div>
+
 		</form>
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const languageList = [
+        "Python", "JavaScript", "Java", "C#", "C++", "Go", "Ruby", "PHP",
+        "Swift", "Kotlin", "Rust", "TypeScript", "Perl", "Scala", "Dart"
+    ];
+
+    function applyTagify(input) {
+        new Tagify(input, {
+            whitelist: languageList,
+            enforceWhitelist: true,
+            maxTags: 10,
+            dropdown: {
+                enabled: 0,
+                maxItems: 15
+            },
+            originalInputValueFormat: values => values.map(tag => tag.value).join(", ")
+        });
+    }
+
+    document.querySelectorAll(".tag-input").forEach(applyTagify);
+
+    let projectCount = parseInt(document.getElementById("projectCount").value);
+
+    document.getElementById("addProjectBtn").addEventListener("click", function () {
+        const container = document.getElementById("projectsContainer");
+
+        const block = document.createElement("div");
+        block.className = "project-block";
+
+        block.innerHTML = `
+            <label for="projectName${projectCount}"><strong>Project Name:</strong></label>
+            <input type="text" id="projectName${projectCount}" name="projectName${projectCount}" required>
+
+            <label for="projectDesc${projectCount}"><strong>Project Description:</strong></label>
+            <textarea id="projectDesc${projectCount}" name="projectDesc${projectCount}" rows="3" required></textarea>
+
+            <label for="projectLang${projectCount}"><strong>Coding Languages:</strong></label>
+            <input type="text" id="projectLang${projectCount}" name="projectLang${projectCount}" class="tag-input" required>
+            
+            <button type="submit"
+				style="background-color: #dc3545; color: white; border: none; 
+				margin-left: 50px; border-radius: 4px; padding: 10px 20px; cursor: pointer;">
+				Delete Project</button>
+        `;
+
+        container.appendChild(block);
+
+        const newInput = block.querySelector(".tag-input");
+        applyTagify(newInput);
+
+        projectCount++;
+        document.getElementById("projectCount").value = projectCount;
+    });
+});
+
+function deleteProject(projectId) {
+    if (confirm('Are you sure you want to delete this project?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'UserController';
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'deleteProject';
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'projectId';
+        idInput.value = projectId;
+
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
 
 </body>
 </html>
