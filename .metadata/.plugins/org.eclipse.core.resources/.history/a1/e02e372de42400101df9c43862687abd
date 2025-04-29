@@ -1,0 +1,407 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="com.util.ConnectionClass"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.model.ProjectModel"%>
+<%@page import="java.util.List"%>
+<%@page import="com.model.EducationModel"%>
+<%@page import="com.model.UserModel"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%
+UserModel model = (UserModel) session.getAttribute("model");
+EducationModel emodel = (EducationModel) session.getAttribute("emodel");
+Map<String, Object> userProjects = (Map<String, Object>) session.getAttribute("userProjects");
+
+if (model == null || emodel == null || userProjects == null) {
+	response.sendRedirect("userLogin.jsp?error=object is getting null");
+	return;
+}
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Edit User Profile</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" />
+
+<style>
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Poppins', sans-serif;
+	background: linear-gradient(to right, #fdfdfd, #e6f0ff);
+	padding: 60px 40px;
+	color: #333;
+}
+
+form {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+h2 {
+	font-size: 36px;
+	color: #1e3a5f;
+	font-weight: 600;
+	margin-bottom: 40px;
+	text-align: center;
+}
+
+h3 {
+	margin-top: 50px;
+	font-size: 24px;
+	color: #007BFF;
+	border-bottom: 2px solid #007BFF;
+	padding-bottom: 6px;
+	margin-bottom: 20px;
+}
+
+label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 500;
+	font-size: 15px;
+	color: #2c3e50;
+}
+
+input[type="text"], input[type="email"], input[type="number"], textarea,
+	select {
+	width: 100%;
+	padding: 12px;
+	margin-bottom: 20px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 15px;
+	background-color: #fff;
+	transition: 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+	border-color: #007BFF;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.15);
+}
+
+.flex-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 40px;
+	margin-bottom: 30px;
+}
+
+.flex-item {
+	flex: 1;
+	min-width: 200px;
+}
+
+.form-actions {
+	text-align: center;
+	margin-top: 40px;
+}
+
+.form-actions button {
+	padding: 12px 25px;
+	background-color: #28a745;
+	color: black;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-actions button:hover {
+	background-color: #218838;
+	transform: translateY(-2px);
+	border: 2px solid black;
+	box-shadow: 0 4px 12px rgba(72, 180, 97, 0.2);
+}
+
+.project-block {
+	background-color: #f4faff;
+	border-left: 5px solid #007BFF;
+	padding: 20px;
+	margin-bottom: 25px;
+	border-radius: 8px;
+}
+
+#addProjectBtn {
+	margin-top: 10px;
+	display: inline-block;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 18px;
+	cursor: pointer;
+	font-size: 15px;
+	transition: background-color 0.3s ease;
+}
+
+#addProjectBtn:hover {
+	background-color: #0056b3;
+}
+
+.project-block .delete-btn {
+	margin-top: 10px;
+	background-color: #dc3545;
+	color: white;
+	border: none;
+	padding: 8px 15px;
+	font-size: 14px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.project-block .delete-btn:hover {
+	background-color: #c82333;
+}
+
+.project-block form {
+	margin-top: 10px;
+	text-align: right;
+}
+</style>
+</head>
+<body>
+
+	<div class="form-container">
+		<h2>Edit Profile</h2>
+		<form action="UserController" method="post"
+			enctype="multipart/form-data">
+			<input type="hidden" name="action" value="updateProfile">
+
+			<label for="firstName">First Name:</label> <input type="text"
+				id="firstName" name="firstName" value="<%=model.getFirstName()%>"
+				required> 
+			<label for="lastName">Last Name:</label> <input
+				type="text" id="lastName" name="lastName"
+				value="<%=model.getLastName()%>" required> 
+			<label for="email">Email:</label> <input type="email" id="email"
+				name="email" value="<%=model.getEmail()%>" required>
+
+			<div class="flex-row">
+				<div class="flex-item">
+					<label for="age">Age:</label> <input type="number" id="age"
+						name="age" value="<%=model.getAge()%>" required>
+				</div>
+				<div class="flex-item">
+					<label for="gender">Gender:</label> <select id="gender"
+						name="gender">
+						<option value="Male"
+							<%="Male".equals(model.getGender()) ? "selected" : ""%>>Male</option>
+						<option value="Female"
+							<%="Female".equals(model.getGender()) ? "selected" : ""%>>Female</option>
+						<option value="Other"
+							<%="Other".equals(model.getGender()) ? "selected" : ""%>>Other</option>
+					</select>
+				</div>
+			</div>
+
+			<label for="address">Address:</label>
+			<textarea id="address" name="address" rows="3" required><%=model.getAddress()%></textarea>
+
+			<label for="phone">Phone Number:</label> <input type="text"
+				id="phone" name="phone" value="<%=model.getPhone()%>" required>
+
+			<h3>Education</h3>
+
+			<label for="instituteName">Institute Name:</label> <input type="text"
+				id="instituteName" name="instituteName"
+				value="<%=emodel.getInstituteName()%>">
+
+			<div class="flex-row">
+				<div class="flex-item">
+					<label for="passoutYear">Passout Year:</label> <select
+						id="passoutYear" name="passoutYear">
+						<%
+						int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+						int selectedYear = emodel.getPassoutYear();
+						for (int year = 1920; year <= currentYear; year++) {
+							String selected = (year == selectedYear) ? "selected" : "";
+						%>
+						<option value="<%=year%>" <%=selected%>><%=year%></option>
+						<%
+						}
+						%>
+					</select>
+				</div>
+				<div class="flex-item">
+					<label for="degreeName">Degree Name:</label> <input type="text"
+						id="degreeName" name="degreeName"
+						value="<%=emodel.getDegreeName()%>">
+				</div>
+			</div>
+
+			<label for="degreeDescription">Degree Description:</label> <input
+				type="text" id="degreeDescription" name="degreeDescription"
+				value="<%=emodel.getDegreeDescription()%>">
+
+			<h3>Projects</h3>
+
+			<div id="projectsContainer">
+				<%
+				List<ProjectModel> projects = (List<ProjectModel>) userProjects.get("projects");
+				List<String> languagesList = (List<String>) userProjects.get("languages");
+
+				for (int i = 0; i < projects.size(); i++) {
+					ProjectModel p = projects.get(i);
+					String langs = languagesList.get(i);
+				%>
+				<div class="project-block">
+					<label for="projectName<%=i%>"><strong>Project
+							Name:</strong></label> <input type="text" id="projectName<%=i%>"
+						name="projectName<%=i%>" value="<%=p.getName()%>" required>
+
+					<label for="projectDesc<%=i%>"><strong>Project
+							Description:</strong></label>
+					<textarea id="projectDesc<%=i%>" name="projectDesc<%=i%>" rows="3"
+						required><%=p.getDescription()%></textarea>
+
+					<label for="projectLang<%=i%>"><strong>Coding
+							Languages:</strong></label> <input type="text" id="projectLang<%=i%>"
+						name="projectLang<%=i%>" class="tag-input" value="<%=langs%>"
+						required> <input type="hidden" name="projectId<%=i%>"
+						value="<%=p.getProjectid()%>">
+
+					<button type="button"
+						onclick="deleteProject('<%=p.getProjectid()%>')"
+						style="background-color: #dc3545; color:
+						 white; border: none; margin-left: 50px; 
+						 border-radius: 4px; padding: 10px 20px; cursor: pointer;">
+						Delete Project</button>
+				</div>
+				<%
+				}
+				%>
+			</div>
+
+			<!-- Add Project Button -->
+			<button type="button" id="addProjectBtn">+ Add Project</button>
+			<input type="hidden" id="projectCount" name="projectCount"
+				value="<%=projects.size()%>">
+
+			
+				<button type="submit"
+				onclick="deleteProject('<%= model.getUserid() %>')">Update Profile</button>
+			
+			
+		</form>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+    	<% 
+    		Connection c = ConnectionClass.getConnection();
+    		String s = "select * from codinglanguage";
+    		
+    		PreparedStatement ps = c.prepareStatement(s);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		List<String> codingLanguages = new ArrayList<>(); 
+    		
+    		while(rs.next())
+    		{
+    			codingLanguages.add(rs.getString("languagename"));
+    		}
+    		
+    		rs.close();
+    	    ps.close();
+    	    c.close();
+    	
+    	%>
+    const languageList = [
+    	<% for (int i = 0; i < codingLanguages.size(); i++) { %>
+        "<%= codingLanguages.get(i) %>"<%= (i < codingLanguages.size() - 1) ? "," : "" %>
+    <% } %>
+    ];
+
+    function applyTagify(input) {
+        new Tagify(input, {
+            whitelist: languageList,
+            enforceWhitelist: true,
+            maxTags: 10,
+            dropdown: {
+                enabled: 0,
+                maxItems: 15
+            },
+            originalInputValueFormat: values => values.map(tag => tag.value).join(", ")
+        });
+    }
+
+    document.querySelectorAll(".tag-input").forEach(applyTagify);
+
+    let projectCount = parseInt(document.getElementById("projectCount").value);
+
+    document.getElementById("addProjectBtn").addEventListener("click", function () {
+        const container = document.getElementById("projectsContainer");
+
+        const block = document.createElement("div");
+        block.className = "project-block";
+
+        block.innerHTML = `
+            <label for="projectName${projectCount}"><strong>Project Name:</strong></label>
+            <input type="text" id="projectName${projectCount}" name="projectName${projectCount}" required>
+
+            <label for="projectDesc${projectCount}"><strong>Project Description:</strong></label>
+            <textarea id="projectDesc${projectCount}" name="projectDesc${projectCount}" rows="3" required></textarea>
+
+            <label for="projectLang${projectCount}"><strong>Coding Languages:</strong></label>
+            <input type="text" id="projectLang${projectCount}" name="projectLang${projectCount}" class="tag-input" required>
+            
+            <button type="submit"
+				style="background-color: #dc3545; color: white; border: none; 
+				margin-left: 50px; border-radius: 4px; padding: 10px 20px; cursor: pointer;">
+				Delete Project</button>
+        `;
+
+        container.appendChild(block);
+
+        const newInput = block.querySelector(".tag-input");
+        applyTagify(newInput);
+
+        projectCount++;
+        document.getElementById("projectCount").value = projectCount;
+    });
+});
+
+function deleteProject(projectId) {
+    if (confirm('Are you sure you want to delete this project?')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'UserController';
+
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'deleteProject';
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'projectId';
+        idInput.value = projectId;
+
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
+</body>
+</html>

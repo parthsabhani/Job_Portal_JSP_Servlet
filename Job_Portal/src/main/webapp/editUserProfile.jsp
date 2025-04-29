@@ -1,3 +1,8 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="com.util.ConnectionClass"%>
+<%@page import="java.sql.Connection"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.model.ProjectModel"%>
 <%@page import="java.util.List"%>
@@ -174,15 +179,22 @@ input:focus, textarea:focus, select:focus {
 
 	<div class="form-container">
 		<h2>Edit Profile</h2>
-		<form action="updateUserProfile.jsp" method="post"
+		<form action="UserController" method="post"
 			enctype="multipart/form-data">
+			<input type="hidden" name="action" value="updateProfile">
+
+			<input type="hidden"
+				id="userid" name="userid" value="<%=model.getUserid()%>"
+				required> 
 
 			<label for="firstName">First Name:</label> <input type="text"
 				id="firstName" name="firstName" value="<%=model.getFirstName()%>"
-				required> <label for="lastName">Last Name:</label> <input
+				required> 				
+				
+			<label for="lastName">Last Name:</label> <input
 				type="text" id="lastName" name="lastName"
-				value="<%=model.getLastName()%>" required> <label
-				for="email">Email:</label> <input type="email" id="email"
+				value="<%=model.getLastName()%>" required> 
+			<label for="email">Email:</label> <input type="email" id="email"
 				name="email" value="<%=model.getEmail()%>" required>
 
 			<div class="flex-row">
@@ -271,8 +283,10 @@ input:focus, textarea:focus, select:focus {
 
 					<button type="button"
 						onclick="deleteProject('<%=p.getProjectid()%>')"
-						style="background-color: #dc3545; color: white; border: none; margin-left: 50px; border-radius: 4px; padding: 10px 20px; cursor: pointer;">
-						Delete</button>
+						style="background-color: #dc3545; color:
+						 white; border: none; margin-left: 50px; 
+						 border-radius: 4px; padding: 10px 20px; cursor: pointer;">
+						Delete Project</button>
 				</div>
 				<%
 				}
@@ -287,16 +301,36 @@ input:focus, textarea:focus, select:focus {
 			<div class="form-actions">
 				<button type="submit">Update Profile</button>
 			</div>
-
+			
 		</form>
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 	<script>
 document.addEventListener("DOMContentLoaded", function () {
+    	<% 
+    		Connection c = ConnectionClass.getConnection();
+    		String s = "select * from codinglanguage";
+    		
+    		PreparedStatement ps = c.prepareStatement(s);
+    		ResultSet rs = ps.executeQuery();
+    		
+    		List<String> codingLanguages = new ArrayList<>(); 
+    		
+    		while(rs.next())
+    		{
+    			codingLanguages.add(rs.getString("languagename"));
+    		}
+    		
+    		rs.close();
+    	    ps.close();
+    	    c.close();
+    	
+    	%>
     const languageList = [
-        "Python", "JavaScript", "Java", "C#", "C++", "Go", "Ruby", "PHP",
-        "Swift", "Kotlin", "Rust", "TypeScript", "Perl", "Scala", "Dart"
+    	<% for (int i = 0; i < codingLanguages.size(); i++) { %>
+        "<%= codingLanguages.get(i) %>"<%= (i < codingLanguages.size() - 1) ? "," : "" %>
+    <% } %>
     ];
 
     function applyTagify(input) {
@@ -324,13 +358,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         block.innerHTML = `
             <label for="projectName${projectCount}"><strong>Project Name:</strong></label>
-            <input type="text" id="projectName${projectCount}" name="projectName${projectCount}" required>
+            <input type="text" id="projectName${projectCount}" name="projectName${projectCount}" >
 
             <label for="projectDesc${projectCount}"><strong>Project Description:</strong></label>
-            <textarea id="projectDesc${projectCount}" name="projectDesc${projectCount}" rows="3" required></textarea>
+            <textarea id="projectDesc${projectCount}" name="projectDesc${projectCount}" rows="3" ></textarea>
 
             <label for="projectLang${projectCount}"><strong>Coding Languages:</strong></label>
-            <input type="text" id="projectLang${projectCount}" name="projectLang${projectCount}" class="tag-input" required>
+            <input type="text" id="projectLang${projectCount}" name="projectLang${projectCount}" class="tag-input" >
             
             <button type="submit"
 				style="background-color: #dc3545; color: white; border: none; 

@@ -1,7 +1,0 @@
-package com.model;
-
-public class CompanyModel 
-{
-	private int companyid;
-	private String name, email, address, phone, website, password;
-}

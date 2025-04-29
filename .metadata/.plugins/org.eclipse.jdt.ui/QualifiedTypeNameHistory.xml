@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="java.sql.DriverManager"/>
-    <fullyQualifiedTypeName name="com.model.UserModel"/>
     <fullyQualifiedTypeName name="com.dao.CompanyDao"/>
     <fullyQualifiedTypeName name="org.apache.tomcat.dbcp.dbcp2.managed.XAConnectionFactory"/>
     <fullyQualifiedTypeName name="com.model.CompanyModel"/>
@@ -20,4 +19,7 @@
     <fullyQualifiedTypeName name="java.util.Map"/>
     <fullyQualifiedTypeName name="com.dao.UserDao"/>
     <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="java.io.IOException"/>
+    <fullyQualifiedTypeName name="com.model.UserModel"/>
+    <fullyQualifiedTypeName name="jakarta.servlet.annotation.MultipartConfig"/>
 </qualifiedTypeNameHistroy>

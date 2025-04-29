@@ -252,5 +252,41 @@ public class UserDao
 		return x;
 	}
 
+	
+	// Update User Profile
+	public int updateUserProfile(UserModel euserModel)
+	{
+		int x =0;
+		
+		c = ConnectionClass.getConnection();
+		String q =" UPDATE users SET "
+				+ "firstname = ?, "
+				+ "lastname = ?, "
+				+ "email = ?, age = ?, "
+				+ "gender = ?, address = ?, "
+				+ "phone = ? "
+				+ "WHERE userid = ?";
+		try 
+		{
+			PreparedStatement ps = c.prepareStatement(q);
+			ps.setString(1, euserModel.getFirstName());
+			ps.setString(2, euserModel.getLastName());
+			ps.setString(3, euserModel.getEmail());
+			ps.setInt(4, euserModel.getAge());
+			ps.setString(5, euserModel.getGender());
+			ps.setString(6, euserModel.getAddress());
+			ps.setString(7, euserModel.getPhone());
+			ps.setInt(8, euserModel.getUserid());
+
+//			System.out.println(euserModel);
+			x = ps.executeUpdate();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return x;
+	}
 }
 

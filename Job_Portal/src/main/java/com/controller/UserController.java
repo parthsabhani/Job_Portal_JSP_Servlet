@@ -1,6 +1,7 @@
 package com.controller;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import com.model.ProjectModel;
 import com.model.UserModel;
 
 @WebServlet("/UserController")
+@MultipartConfig
 public class UserController extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
@@ -33,7 +35,14 @@ public class UserController extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		String action = request.getParameter("action");
-		System.out.println("Action : " + action);
+		if (action == null) {
+		    response.sendRedirect("userLogin.jsp?error=action_null");
+		    return;
+		}
+		else
+		{			
+			System.out.println("Action : " + action);
+		}
 		UserDao userDao =  new UserDao();
 		
 		if(action.equalsIgnoreCase("register"))
@@ -54,6 +63,10 @@ public class UserController extends HttpServlet
 		else if(action.equalsIgnoreCase("deleteProject"))
 		{
 			deleteProject(request, response, userDao);
+			
+		}else if(action.equalsIgnoreCase("updateProfile"))
+		{
+			updateUserProfile(request, response, userDao);
 			
 		}
 		
@@ -184,6 +197,44 @@ public class UserController extends HttpServlet
 			response.sendRedirect("editUserProfile.jsp");
 		}
 
+	}
+
+	public void updateUserProfile(HttpServletRequest request, HttpServletResponse response, UserDao userDao) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+            response.sendRedirect("userLogin.jsp");  // Redirect to login page if session is invalid
+            return;
+        }
+		UserModel euserModel = new UserModel();
+		euserModel.setUserid(Integer.parseInt(request.getParameter("userid")));
+		euserModel.setFirstName(request.getParameter("firstName"));
+		euserModel.setLastName(request.getParameter("lastName"));
+		
+		String email = request.getParameter("email");
+		euserModel.setEmail(email);
+		
+		String ageParam = request.getParameter("age");
+		euserModel.setAge(Integer.parseInt(ageParam));
+		
+		String gender = request.getParameter("gender");
+		euserModel.setGender(gender);
+		
+		euserModel.setAddress(request.getParameter("address"));
+		euserModel.setPhone(request.getParameter("phone"));
+		euserModel.setPassword(request.getParameter("password"));
+		
+		
+		int x = userDao.updateUserProfile(euserModel);
+			
+		if(x > 0)
+		{
+			session.setAttribute("model", euserModel);
+			response.sendRedirect("userProfile.jsp");
+		}else
+		{
+			response.sendRedirect("editUserProfile.jsp");	
+		}
 	}
 }
  
